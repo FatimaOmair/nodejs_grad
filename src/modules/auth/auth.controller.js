@@ -1,16 +1,17 @@
 import { userModel } from "../../../DB/model/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken"
-export const signUp = async (req, res, next) => {
+import { studentModel } from "../../../DB/model/student.model.js";
+export const userSignUp = async (req, res, next) => {
   try {
-    const { name, email, password, phoneNumber, role, depId } = req.body;
+    const { name, email, password, phoneNumber, role, depId,officeHours} = req.body;
     const exitUser = await userModel.findOne({ email: email });
     if (exitUser) {
       return next(new Error("exit user", { cause: 500 }));
     }
     const hash = await bcrypt.hash(password, parseInt(process.env.SALTROUND));
     let user = undefined;
-    if (depId) {
+    if (depId && officeHours) {
       user = await userModel.create({
         name,
         email,
@@ -18,6 +19,7 @@ export const signUp = async (req, res, next) => {
         phoneNumber,
         role,
         depId,
+        officeHours
       });
     } else {
       user = await userModel.create({
@@ -35,6 +37,27 @@ export const signUp = async (req, res, next) => {
   }
 };
 
+export const studentSignUp = async (req, res, next) => {
+  try {
+    const { name, email, password, phoneNumber,depId,academicYear} = req.body;
+    const exitUser = await studentModel.findOne({ email: email });
+    if (exitUser) {
+      return next(new Error("exit user", { cause: 500 }));
+    }
+    const hash = await bcrypt.hash(password, parseInt(process.env.SALTROUND));
+    const user = await studentModel.create({
+      name,
+      email,
+      password: hash,
+      phoneNumber,
+      depId,
+      academicYear
+    });
+    res.status(201).json({ message: "success", user });
+  } catch (err) {
+    next(new Error(err.message, { cause: 500 }));
+  }
+};
 export const signIn = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -66,3 +89,5 @@ export const signIn = async (req, res, next) => {
     next(new Error(err.message, { cause: 500 }));
   }
 };
+
+

@@ -1,7 +1,12 @@
 import { Router } from "express";
-import { createDepartment } from "./admin.controller.js";
+import { createDepartment, createProject, getAllProjects, getProjects, getStudents, getUsers } from "./admin.controller.js";
 import { auth } from "../../middleWare/auth.js";
 import { role } from "../../services/role.js";
 const router = Router();
-router.post("/add",auth([role.admin]), createDepartment);
+router.post("/addDepartment",auth([role.admin]), createDepartment);
+router.post("/addProject",auth([role.admin]), createProject);
+router.get("/getUsers",auth([role.admin]),getUsers);
+router.get("/getStudents",auth([role.admin]),getStudents);
+router.get("/getprojects/:id",getProjects);
+router.get("/getprojects",getAllProjects);
 export default router;

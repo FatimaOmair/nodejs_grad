@@ -1,5 +1,5 @@
 import { model, Schema, Types } from "mongoose";
-const userSchema = new Schema(
+const studentSchema = new Schema(
   {
     name: {
       type: String,
@@ -32,16 +32,11 @@ const userSchema = new Schema(
       type: String,
       default: null,
     },
-    role: {
-      type: String,
-      enum: ["admin", "headOfDepartment", "supervisor"],
-      required: true,
-    },
-    officeHours: {
-      type: String,
-      required:false,
+    academicYear: {
+        type:Number,
+        required: true,
     }
   },
   { timestamps: true }
 );
-export const userModel = model("user", userSchema);
+export const studentModel = model("student",studentSchema);
