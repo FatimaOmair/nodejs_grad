@@ -2,6 +2,7 @@ import { departmentModel } from "../../../DB/model/department.model.js";
 import { userModel } from "../../../DB/model/user.model.js";
 import { studentModel } from "../../../DB/model/student.model.js";
 import { projectModel } from "../../../DB/model/project.model.js";
+import bcrypt from "bcryptjs";
 export const createDepartment = async (req, res, next) => {
   try {
     const { name } = req.body;
@@ -58,4 +59,52 @@ export const getAllProjects = async (req, res, next) => {
       next(new Error(err.message, { cause: 500 }));
     }
 };
-  
+
+export const deleteUser = async (req, res, next) => {
+  try {
+    const {id} = req.params;
+    const user = await userModel.deleteOne({_id:id});
+    if(!user.deletedCount){
+      res.status(200).json({ message: "user not found"});
+    }
+    res.status(200).json({ message: "success", user });
+  } catch (err) {
+    next(new Error(err.message, { cause: 500 }));
+  }
+};
+export const deleteStudent = async (req, res, next) => {
+  try {
+    const {id} = req.params;
+    const user = await studentModel.deleteOne({_id:id});
+    if(!user.deletedCount){
+      res.status(200).json({ message: "student not found"});
+    }
+    res.status(200).json({ message: "success", user });
+  } catch (err) {
+    next(new Error(err.message, { cause: 500 }));
+  }
+};
+export const deleteProject = async (req, res, next) => {
+  try {
+    const {id} = req.params;
+    const project = await projectModel.deleteOne({_id:id});
+    if(!project.deletedCount){
+      res.status(200).json({ message: "project not found"});
+    }
+    res.status(200).json({ message: "success", project });
+  } catch (err) {
+    next(new Error(err.message, { cause: 500 }));
+  }
+};
+export const updateSupervisor = async (req, res, next) => {
+  try {
+    const {id} = req.params;
+    const{phoneNumber, password} = req.body;
+    const hash = await bcrypt.hash(password, parseInt(process.env.SALTROUND));
+    const supervisor = await userModel.updateOne({_id:id},{phoneNumber: phoneNumber, password: hash})
+    res.status(200).json({ message: "success", supervisor });
+  } catch (err) {
+    next(new Error(err.message, { cause: 500 }));
+  }
+};
+
