@@ -90,7 +90,7 @@ export const signIn = async (req, res, next) => {
         expiresIn: 60 * 60 * 24 * 7 ,
       }
     );
-    res.status(200).json({ message: "valid account", token, role: user.role });
+    return res.status(200).json({ message: "valid account", token, role: user.role });
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
   }

@@ -13,6 +13,7 @@ const projectSchema = new Schema(
         type:String,
         required: true,
     },
+    thesis:String,
     img: {
       type: String,
     },
