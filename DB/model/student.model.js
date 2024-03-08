@@ -35,6 +35,10 @@ const studentSchema = new Schema(
     academicYear: {
         type:Number,
         required: true,
+    },
+    role:{
+      type: String,
+      default:"student"
     }
   },
   { timestamps: true }
