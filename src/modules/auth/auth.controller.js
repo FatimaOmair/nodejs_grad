@@ -2,6 +2,7 @@ import { userModel } from "../../../DB/model/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken"
 import { studentModel } from "../../../DB/model/student.model.js";
+import { nanoid } from "nanoid";
 export const userSignUp = async (req, res, next) => {
   try {
     const { name, email, password, phoneNumber, role, depId,officeHours} = req.body;
@@ -61,9 +62,14 @@ export const studentSignUp = async (req, res, next) => {
 export const signIn = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const user = await userModel.findOne({
+    let user = await userModel.findOne({
       email,
     });
+    if (!user) {
+      user = await studentModel.findOne({
+        email: email,
+      });
+    }
     if (!user) {
       return next(new Error("invalid account", { cause: 404 }));
     }
@@ -81,7 +87,7 @@ export const signIn = async (req, res, next) => {
       },
       process.env.LOGINTOKEN,
       {
-        expiresIn: 60 * 60 * 24,
+        expiresIn: 60 * 60 * 24 * 7 ,
       }
     );
     res.status(200).json({ message: "valid account", token, role: user.role });
@@ -90,4 +96,29 @@ export const signIn = async (req, res, next) => {
   }
 };
 
+// export const sendCode = async (req, res, next) => {
+//   try {
+//     const { email } = req.body;
+//     let user = await studentModel.findOne({ email }).select("email role");
+//     let supervisor = false;
+//     if (!user) {
+//       user = await userModel.findOne({ email }).select("email role");
+//       supervisor = true;
+//     }
+//     if (!user) {
+//       next(new Error("cant find user", { cause: 404 }));
+//     } else {
+//       const code = nanoid();
+//       await sendEmail(email, "Forget password", `verify code : ${code}`);
+//       if (supervisor) {
+//         await userModel.findOneAndUpdate({ email }, { sendCode: code });
+//       } else {
+//         await userModel.findOneAndUpdate({ email }, { sendCode: code });
+//       }
 
+//       res.status(200).json({ message: "ok", role: user.role });
+//     }
+//   } catch (err) {
+//     next(new Error(err.message, { cause: 500 }));
+//   }
+// };
