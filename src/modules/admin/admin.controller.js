@@ -7,9 +7,13 @@ import { uploadFile } from "../../services/uploadFile.js";
 export const createDepartment = async (req, res, next) => {
   try {
     const { name,userId } = req.body;
+    const user = await userModel.findById(userId);
+    if(!user){
+      return res.json({message:"user not found"});
+    }
     const department = new departmentModel({ name, userId });
     const savedDepartment = await department.save();
-    res.status(200).json({ message: "success", savedDepartment });
+    return res.status(200).json({ message: "success", savedDepartment });
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
   }
@@ -55,6 +59,10 @@ export const createProject = async (req, res, next) => {
 export const getProjects = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const dep = await departmentModel.findById(id);
+    if(!dep){
+      return res.json({message :"No department"});
+    }
     const projects = await projectModel.find({ depId: id });
     res.status(200).json({ message: "success", projects });
   } catch (err) {
@@ -115,6 +123,9 @@ export const updateSupervisor = async (req, res, next) => {
       { _id: id },
       {name,email,depId,role,officeHours,phoneNumber, password: hash}
     );
+    if(!supervisor.modifiedCount){
+      return res.json({message:"user not found"})
+    }
     res.status(200).json({ message: "success", supervisor });
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
@@ -129,6 +140,9 @@ export const updateStudent = async (req, res, next) => {
       { _id: id },
       {name,email,depId,phoneNumber, password: hash}
     );
+    if(!student.modifiedCount){
+      return res.json({message:"user not found"})
+    }
     res.status(200).json({ message: "success", student });
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
