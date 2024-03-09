@@ -3,12 +3,11 @@ import { userModel } from "../../../DB/model/user.model.js";
 import { studentModel } from "../../../DB/model/student.model.js";
 import { projectModel } from "../../../DB/model/project.model.js";
 import bcrypt from "bcryptjs";
-import cloudinary from "../../services/cloudinary.js";
 import { uploadFile } from "../../services/uploadFile.js";
 export const createDepartment = async (req, res, next) => {
   try {
-    const { name } = req.body;
-    const department = new departmentModel({ name });
+    const { name,userId } = req.body;
+    const department = new departmentModel({ name, userId });
     const savedDepartment = await department.save();
     res.status(200).json({ message: "success", savedDepartment });
   } catch (err) {
@@ -110,13 +109,27 @@ export const deleteProject = async (req, res, next) => {
 export const updateSupervisor = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { phoneNumber, password } = req.body;
+    const {name,email,depId,role,officeHours,phoneNumber, password } = req.body;
     const hash = await bcrypt.hash(password, parseInt(process.env.SALTROUND));
     const supervisor = await userModel.updateOne(
       { _id: id },
-      { phoneNumber: phoneNumber, password: hash }
+      {name,email,depId,role,officeHours,phoneNumber, password: hash}
     );
     res.status(200).json({ message: "success", supervisor });
+  } catch (err) {
+    next(new Error(err.message, { cause: 500 }));
+  }
+};
+export const updateStudent = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const {name,email,depId,phoneNumber,password} = req.body;
+    const hash = await bcrypt.hash(password, parseInt(process.env.SALTROUND));
+    const student = await studentModel.updateOne(
+      { _id: id },
+      {name,email,depId,phoneNumber, password: hash}
+    );
+    res.status(200).json({ message: "success", student });
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
   }
