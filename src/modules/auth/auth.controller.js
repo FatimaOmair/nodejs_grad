@@ -2,7 +2,6 @@ import { userModel } from "../../../DB/model/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken"
 import { studentModel } from "../../../DB/model/student.model.js";
-import { nanoid } from "nanoid";
 export const userSignUp = async (req, res, next) => {
   try {
     const { name, email, password, phoneNumber, role, depId,officeHours} = req.body;
