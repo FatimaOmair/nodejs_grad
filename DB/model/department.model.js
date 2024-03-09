@@ -1,9 +1,13 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, Types } from "mongoose";
 const departmentSchema = new Schema(
   {
     name: {
       type: String,
       required: true,
+    },
+    userId: {
+      type: Types.ObjectId,
+      ref: "user",
     },
   },
   { timestamps: true }
