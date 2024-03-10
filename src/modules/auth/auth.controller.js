@@ -7,7 +7,7 @@ export const userSignUp = async (req, res, next) => {
     const { name, email, password, phoneNumber, role, depId,officeHours} = req.body;
     const exitUser = await userModel.findOne({ email: email });
     if (exitUser) {
-      return next(new Error("exit user", { cause: 500 }));
+      return next(new Error("exist user", { cause: 500 }));
     }
     const hash = await bcrypt.hash(password, parseInt(process.env.SALTROUND));
     let user = undefined;
@@ -42,7 +42,7 @@ export const studentSignUp = async (req, res, next) => {
     const { name, email, password, phoneNumber,depId,academicYear} = req.body;
     const exitUser = await studentModel.findOne({ email: email });
     if (exitUser) {
-      return next(new Error("exit user", { cause: 500 }));
+      return next(new Error("exist user", { cause: 500 }));
     }
     const hash = await bcrypt.hash(password, parseInt(process.env.SALTROUND));
     const user = await studentModel.create({
@@ -58,6 +58,7 @@ export const studentSignUp = async (req, res, next) => {
     next(new Error(err.message, { cause: 500 }));
   }
 };
+
 export const signIn = async (req, res, next) => {
   try {
     const { email, password } = req.body;
