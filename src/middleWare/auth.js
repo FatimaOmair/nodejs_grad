@@ -8,7 +8,7 @@ export const auth = (accessRoles = []) => {
       if (!token.startsWith(process.env.authBearerToken)) {
         return next(new Error("error token", { cause: 400 }));
       }
-      token = token.split("__")[1];
+      token = token.split(" ")[1];
       const decoded = await jwt.verify(token, process.env.LOGINTOKEN);
 
       const user = await userModel
