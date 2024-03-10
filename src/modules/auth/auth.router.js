@@ -1,7 +1,11 @@
 import { Router } from "express";
 import { signIn, studentSignUp, userSignUp } from "./auth.controller.js";
+import { auth } from "../../middleWare/auth.js";
+import { role } from "../../services/role.js";
+import { validation } from "../../middleWare/validation.js";
+import { signInValidation, signupValidation, studentValidation } from "./auth.validation.js";
 const router = Router();
-router.post("/registerUser", userSignUp);
-router.post("/registerStudent", studentSignUp);
-router.post("/signIn", signIn);
+router.post("/registerUser",validation(signupValidation),auth([role.admin]), userSignUp);
+router.post("/registerStudent",validation(studentValidation),auth([role.admin]), studentSignUp);
+router.post("/signIn",validation(signInValidation), signIn);
 export default router;
