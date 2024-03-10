@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./DB/connection.js";
-import { adminRouter, authRouter } from "./src/modules/index.router.js";
+import { adminRouter, authRouter, headRouter, studentRouter } from "./src/modules/index.router.js";
 dotenv.config();
 const app = express();
 const port = 3001 || process.env.PORT;
@@ -11,7 +11,8 @@ const BASE_URL = process.env.BASE_URL;
 
 app.use(`${BASE_URL}auth`, authRouter);
 app.use(`${BASE_URL}admin`, adminRouter);
-
+app.use(`${BASE_URL}head`,headRouter);
+app.use(`${BASE_URL}student`,studentRouter);
 app.use("*", (req, res) => {
   res.status(404).json({ message: "page is not found" });
 });
