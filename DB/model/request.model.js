@@ -13,6 +13,10 @@ const requestSchema = new Schema(
       type: Types.ObjectId,
       ref: "user",
     },
+    state:{
+      type:String,
+      default:"Pending"
+    }
    
     
   },
