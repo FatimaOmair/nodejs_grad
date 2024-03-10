@@ -3,10 +3,12 @@ import { createDepartment, createProject, deleteProject, deleteStudent, deleteUs
 import { auth } from "../../middleWare/auth.js";
 import { role } from "../../services/role.js";
 import { HME, multerValidation, myMulter } from "../../services/multer.js";
+import { validation } from "../../middleWare/validation.js";
+import { createDepValidation, createProjectValidation } from "./admin.validation.js";
 const router = Router();
-router.post("/addDepartment",auth([role.admin]), createDepartment);
+router.post("/addDepartment",validation(createDepValidation),auth([role.admin]), createDepartment);
 router.post(
-  "/addProject",auth([role.admin]), 
+  "/addProject",validation(createProjectValidation),auth([role.admin]), 
   myMulter(multerValidation.pdf).fields([{name:"img"},{name:"thesis"}]),
   HME,
   createProject
