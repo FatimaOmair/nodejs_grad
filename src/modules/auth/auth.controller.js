@@ -39,7 +39,7 @@ export const userSignUp = async (req, res, next) => {
 
 export const studentSignUp = async (req, res, next) => {
   try {
-    const { name, email, password, phoneNumber,depId,academicYear} = req.body;
+    const { name, email, password, phoneNumber,depId,academicYear,universityNum} = req.body;
     const exitUser = await studentModel.findOne({ email: email });
     if (exitUser) {
       return next(new Error("exist user", { cause: 500 }));
@@ -51,7 +51,8 @@ export const studentSignUp = async (req, res, next) => {
       password: hash,
       phoneNumber,
       depId,
-      academicYear
+      academicYear,
+      universityNum
     });
     res.status(201).json({ message: "success", user });
   } catch (err) {
