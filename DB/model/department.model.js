@@ -5,11 +5,7 @@ const departmentSchema = new Schema(
       type: String,
       required: true,
 
-    },
-    userId: {
-      type: Types.ObjectId,
-      ref: "user",
-    },
+    }
   },
   { timestamps: true }
 );
