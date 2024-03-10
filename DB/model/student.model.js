@@ -39,6 +39,10 @@ const studentSchema = new Schema(
     role:{
       type: String,
       default:"student"
+    },
+    universityNum:{
+      type: String,
+      
     }
   },
   { timestamps: true }
