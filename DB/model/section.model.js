@@ -16,7 +16,12 @@ const sectionSchema = new Schema(
     students:{
         type:[{type: Types.ObjectId,ref:"student"}],
         required:false,
-    }
+    },
+    visible:{
+      type: Boolean,
+      default:true
+    },
+    
   },
   { timestamps: true }
 );
