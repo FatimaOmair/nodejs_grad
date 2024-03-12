@@ -40,8 +40,7 @@ export const confirm = async (req, res, next) => {
  
 export const getMySections = async (req, res, next) => {
   try {
-    const {id} = req.params;
-    const section = await sectionModel.find({userId: id});
+    const section = await sectionModel.find({userId:req.userId});
     return res.status(201).json(section);
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
