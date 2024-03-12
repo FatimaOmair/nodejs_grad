@@ -6,12 +6,8 @@ import bcrypt from "bcryptjs";
 import { uploadFile } from "../../services/uploadFile.js";
 export const createDepartment = async (req, res, next) => {
   try {
-    const { name,userId } = req.body;
-    const user = await userModel.findById(userId);
-    if(!user){
-      return res.json({message:"user not found"});
-    }
-    const department = new departmentModel({ name, userId });
+    const { name} = req.body;
+    const department = new departmentModel({name});
     const savedDepartment = await department.save();
     return res.status(200).json({ message: "success", savedDepartment });
   } catch (err) {
@@ -42,6 +38,10 @@ export const createProject = async (req, res, next) => {
     const { name, group, supervisorName, depId } = req.body;
     const img = await uploadFile(req.files["img"][0].path);
     const thesis = await uploadFile(req.files["thesis"][0].path);
+    const existingDepartment = await departmentModel.findById(depId);
+    if (!existingDepartment) {
+      return next(new Error("Department does not exist", { cause: 500 }));
+    }
     const project = new projectModel({
       thesis,
       img,
@@ -144,6 +144,18 @@ export const updateStudent = async (req, res, next) => {
       return res.json({message:"user not found"})
     }
     res.status(200).json({ message: "success", student });
+  } catch (err) {
+    next(new Error(err.message, { cause: 500 }));
+  }
+};
+export const deleteDepartment = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const dep = await departmentModel.deleteOne({ _id: id });
+    if (!dep.deletedCount) {
+      res.status(200).json({ message: "department not found" });
+    }
+    res.status(200).json({ message: "success", dep });
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
   }
