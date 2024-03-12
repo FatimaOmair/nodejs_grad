@@ -24,6 +24,8 @@ export const auth = (accessRoles = []) => {
         return next(new Error("U Are not authorized", { cause: 401 }));
       }
       req.user = user;
+      req.userId =decoded._id;
+      req.depId=decoded.depId;
       next();
     } catch (err) {
       next(new Error("sendToken", { cause: 400 }));
