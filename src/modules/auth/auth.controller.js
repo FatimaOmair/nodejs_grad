@@ -5,10 +5,12 @@ import { studentModel } from "../../../DB/model/student.model.js";
 import { departmentModel } from "../../../DB/model/department.model.js";
 import { nanoid } from "nanoid";
 import sendEmail from "../../services/email.js";
+
 export const userSignUp = async (req, res, next) => {
   try {
     const { name, email, password, phoneNumber, role, depId,officeHours} = req.body;
     const exitUser = await userModel.findOne({ email: email });
+    
     if (exitUser) {
       return next(new Error("exist user", { cause: 500 }));
     }
@@ -44,14 +46,24 @@ export const userSignUp = async (req, res, next) => {
   }
 };
 
+
+
 export const studentSignUp = async (req, res, next) => {
   try {
-    const { name, email, password, phoneNumber,depId,academicYear,universityNum} = req.body;
-    const exitUser = await studentModel.findOne({ email: email });
-    if (exitUser) {
-      return next(new Error("exist user", { cause: 500 }));
+    const { name, email, password, phoneNumber, depId, academicYear, universityNum } = req.body;
+
+    const existingUser = await studentModel.findOne({ email: email });
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists" });
     }
+
+    const existingDepartment = await departmentModel.findById(depId);
+    if (!existingDepartment) {
+      return res.status(404).json({ message: "Department does not exist" });
+    }
+
     const hash = await bcrypt.hash(password, parseInt(process.env.SALTROUND));
+
     const user = await studentModel.create({
       name,
       email,
@@ -61,7 +73,8 @@ export const studentSignUp = async (req, res, next) => {
       academicYear,
       universityNum
     });
-    res.status(201).json({ message: "success", user });
+
+    res.status(201).json({ message: "Student created successfully", user });
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
   }
