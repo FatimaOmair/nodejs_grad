@@ -5,10 +5,9 @@ Joi.objectId = objectId(Joi);
 export const createDepValidation = {
     body: Joi.object().required().keys({
         name: Joi.string().max(50).required().messages({
-          "any.required": "Send a name for the user, please",
+          "any.required": "Send a name for the department, please",
           "string.empty": "name is required",
         }),
-        userId:Joi.objectId().required()
        
       }),
   };
