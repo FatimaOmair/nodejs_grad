@@ -1,6 +1,8 @@
 import { requestModel } from "../../../DB/model/request.model.js";
 import { sectionModel } from "../../../DB/model/section.model.js";
+import { taskModel } from "../../../DB/model/task.model.js";
 import { getUser } from "../../services/getId.js";
+import { uploadFile } from "../../services/uploadFile.js";
 import { getUsers } from "../admin/admin.controller.js";
 
 export const reject = async (req, res, next) => {
@@ -41,8 +43,20 @@ export const confirm = async (req, res, next) => {
 export const getMySections = async (req, res, next) => {
   try {
     const section = await sectionModel.find({userId:req.userId});
-    return res.status(201).json(section);
+    return res.status(200).json(section);
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
   }
 };
+
+export const assignTask = async (req, res, next) => {
+  try {
+    const {txt,sections}=req.body;
+    const fileTask = await uploadFile(req.file.path);
+    const task = await taskModel.create({txt,sections,file:fileTask});
+    return res.status(201).json(task);
+  } catch (err) {
+    next(new Error(err.message, { cause: 500 }));
+  }
+};
+
