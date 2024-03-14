@@ -1,8 +1,10 @@
 import { requestModel } from "../../../DB/model/request.model.js";
 import { sectionModel } from "../../../DB/model/section.model.js";
 import { taskModel } from "../../../DB/model/task.model.js";
+import { userModel } from "../../../DB/model/user.model.js";
 import { getUser } from "../../services/getId.js";
 import { uploadFile } from "../../services/uploadFile.js";
+import bcrypt from "bcryptjs";
 import { getUsers } from "../admin/admin.controller.js";
 
 export const reject = async (req, res, next) => {
@@ -21,7 +23,7 @@ export const reject = async (req, res, next) => {
 
 export const confirm = async (req, res, next) => {
   try {
-    const { sectionId, requestId, students } = req.body;
+    const {  students } = req.body;
     const arr = [];
     for (let i = 0; i < students.length; i++) {
       const user = await getUser(students[i]);
@@ -39,10 +41,10 @@ export const confirm = async (req, res, next) => {
     next(new Error(err.message, { cause: 500 }));
   }
 };
- 
+
 export const getMySections = async (req, res, next) => {
   try {
-    const section = await sectionModel.find({userId:req.userId});
+    const section = await sectionModel.find({ userId: req.userId });
     return res.status(200).json(section);
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
@@ -51,12 +53,78 @@ export const getMySections = async (req, res, next) => {
 
 export const assignTask = async (req, res, next) => {
   try {
-    const {txt,sections}=req.body;
+    const { txt, sections } = req.body;
     const fileTask = await uploadFile(req.file.path);
-    const task = await taskModel.create({txt,sections,file:fileTask});
+    const task = await taskModel.create({ txt, sections, file: fileTask });
     return res.status(201).json(task);
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
   }
 };
+
+export const giveFeedback = async (req, res, next) => {
+  try {
+    const {  feedback } = req.body;
+    const {id}=req.params
+    const task = await taskModel.findById(id);
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+    task.feedback = feedback;
+    await task.save();
+    return res.status(200).json({ message: "Feedback submitted successfully", feedback ,task });
+  } catch (err) {
+    next(new Error(err.message, { cause: 500 }));
+  }
+};
+
+
+
+export const viewProfile = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    
+    const userProfile = await userModel.findById(userId)
+                                       .populate({
+                                         path: 'depId',
+                                         select: 'name'
+                                       })
+                                       .select('img name email officeHours depId');
+
+    if (!userProfile) {
+      return res.status(404).json({ message: "User profile not found" });
+    }
+    const departmentName = userProfile.depId ? userProfile.depId.name : null;
+    userProfile.departmentName = departmentName;
+    delete userProfile.depId; 
+    return res.status(200).json(userProfile);
+  } catch (err) {
+    next(new Error(err.message, { cause: 500 }));
+  }
+};
+
+
+
+export const editProfile = async (req, res, next) => {
+  try {
+    const userId = req.userId;
+    const { password, phoneNumber } = req.body;
+    const user = await userModel.findById(userId);
+    if (password) {
+      const saltRounds = parseInt(process.env.SALTROUND);
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+      user.password = hashedPassword;
+    }
+    if (phoneNumber) user.phoneNumber = phoneNumber;
+
+    await user.save();
+
+    return res.status(200).json({ message: "Profile updated successfully", user });
+  } catch (err) {
+    console.error(err); 
+    return res.status(500).json({ message: "Internal server error",err:err.stack });
+  }
+};
+
+
 
