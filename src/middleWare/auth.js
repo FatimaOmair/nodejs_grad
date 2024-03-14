@@ -1,34 +1,40 @@
 import jwt from "jsonwebtoken";
 import { userModel } from "../../DB/model/user.model.js";
+import { studentModel } from "../../DB/model/student.model.js";
 
 export const auth = (accessRoles = []) => {
   return async (req, res, next) => {
     try {
       let { token } = req.headers;
-      if (!token.startsWith(process.env.authBearerToken)) {
-        return next(new Error("error token", { cause: 400 }));
+      if (!token || !token.startsWith(process.env.authBearerToken)) {
+        return next(new Error("Invalid token", { cause: 400 }));
       }
       token = token.split(" ")[1];
       const decoded = await jwt.verify(token, process.env.LOGINTOKEN);
 
-      const user = await userModel
-        .findOne({
-          email: decoded.email,
-        })
-        .select("role _id ");
-
+      let user = await userModel.findOne({
+        email:decoded.email,
+      });
       if (!user) {
-        return next(new Error("user not found", { cause: 404 }));
+        user = await studentModel.findOne({
+          email: decoded.email,
+        });
       }
+      
+      if (!user) {
+        return next(new Error("User not found", { cause: 404 }));
+      }
+      
       if (!accessRoles.includes(user.role)) {
-        return next(new Error("U Are not authorized", { cause: 401 }));
+        return next(new Error("Unauthorized", { cause: 401 }));
       }
+      
       req.user = user;
-      req.userId =decoded._id;
-      req.depId=decoded.depId;
+      req.userId = decoded._id;
+      req.depId = decoded.depId;
       next();
     } catch (err) {
-      next(new Error("sendToken", { cause: 400 }));
+      next(new Error("Failed to authenticate", { cause: 400 }));
     }
   };
 };
