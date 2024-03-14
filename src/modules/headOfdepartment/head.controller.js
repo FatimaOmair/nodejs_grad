@@ -1,4 +1,5 @@
 import { sectionModel } from "../../../DB/model/section.model.js";
+import { userModel } from "../../../DB/model/user.model.js";
 
 export const createSection = async (req, res, next) => {
   try {
@@ -36,6 +37,15 @@ export const deleteSection = async (req, res, next) => {
     return res.status(200).json(section);
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
+  }
+};
+
+export const updateHeadSections = async (req, res, next) => {
+  try {
+    const mySections = await sectionModel.find({depId:req.depId});
+   
+  } catch (err) {
+    next(new Error(err.message)); 
   }
 };
 
