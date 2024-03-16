@@ -48,7 +48,6 @@ export const deleteSection = async (req, res, next) => {
 
 export const updateHeadSections = async (req, res, next) => {
   try {
-
     const { supervisorId, studentIdsToAdd, studentIdsToDelete } = req.body;
     const sectionId = req.params.sectionId; 
     const section = await sectionModel.findById(sectionId);
@@ -56,6 +55,7 @@ export const updateHeadSections = async (req, res, next) => {
     if (!section) {
       return res.status(404).json({ message: "Section not found" });
     }
+
     if (supervisorId) {
       const supervisor = await userModel.findById(supervisorId);
       if (!supervisor) {
@@ -95,10 +95,14 @@ export const updateHeadSections = async (req, res, next) => {
 
     await section.save();
 
-    res.status(200).json({ message: "Section updated successfully", section });
     const mySections = await sectionModel.find({ depId: req.depId });
-   return res.json(mySections);
-
+    
+    res.status(200).json({ 
+      message: "Section updated successfully", 
+      section,
+      mySections
+    });
+    
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
@@ -114,41 +118,7 @@ export const updateHeadSections = async (req, res, next) => {
 
 
 
-export const deleteStudentsFromSection = async (req, res, next) => {
-  try {
-    const { studentIdsToDelete } = req.body;
-    const sectionId = req.params.sectionId; 
 
-    console.log("Request Body:", req.body); // Log the request body to check if studentIdsToDelete are received
-
-    const section = await sectionModel.findById(sectionId);
-
-    console.log("Fetched Section:", section); // Log the fetched section to check if it's retrieved correctly
-
-    if (!section) {
-      return res.status(404).json({ message: "Section not found" });
-    }
-
-    console.log("Before deletion:", section.students); // Log the students array before deletion
-
-    // Iterate over studentIdsToDelete and remove each student ID from the section's students array
-    for (let i = 0; i < studentIdsToDelete.length; i++) {
-      const index = section.students.indexOf(studentIdsToDelete[i]);
-      if (index !== -1) {
-        section.students.splice(index, 1);
-      }
-    }
-
-    console.log("After deletion:", section.students); // Log the students array after deletion
-
-    // Save the updated section
-    await section.save();
-
-    res.status(200).json({ message: "Students deleted successfully from the section", section });
-  } catch (err) {
-    return res.status(500).json({ error: err.message });
-  }
-};
 
 
 
