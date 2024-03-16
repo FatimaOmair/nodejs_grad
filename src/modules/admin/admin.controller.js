@@ -14,7 +14,14 @@ export const createDepartment = async (req, res, next) => {
     next(new Error(err.message, { cause: 500 }));
   }
 };
-
+export const getDepartments = async (req, res, next) => {
+  try {
+    const deps = await departmentModel.find();
+    res.status(200).json({ message: "success", deps });
+  } catch (err) {
+    next(new Error(err.message, { cause: 500 }));
+  }
+};
 export const getUsers = async (req, res, next) => {
   try {
     const users = await userModel.find();
