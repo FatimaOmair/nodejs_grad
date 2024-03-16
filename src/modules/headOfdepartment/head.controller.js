@@ -1,5 +1,4 @@
 import { sectionModel } from "../../../DB/model/section.model.js";
-import { userModel } from "../../../DB/model/user.model.js";
 
 export const createSection = async (req, res, next) => {
   try {
@@ -13,7 +12,7 @@ export const createSection = async (req, res, next) => {
 
 export const getHeadSections = async (req, res, next) => {
   try {
-    const sections = await sectionModel.find({ userId: req.userId });
+    const sections = await sectionModel.find({depId: req.depId });
     
     if (sections.length === 0) {
       return res.status(404).json({ message: "There are no sections available for your department." });
@@ -42,8 +41,8 @@ export const deleteSection = async (req, res, next) => {
 
 export const updateHeadSections = async (req, res, next) => {
   try {
-    const mySections = await sectionModel.find({depId:req.depId});
-   
+    const mySections = await sectionModel.find({ depId: req.depId });
+   return res.json(mySections);
   } catch (err) {
     next(new Error(err.message)); 
   }
