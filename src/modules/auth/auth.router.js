@@ -4,8 +4,10 @@ import { auth } from "../../middleWare/auth.js";
 import { role } from "../../services/role.js";
 import { validation } from "../../middleWare/validation.js";
 import { signInValidation, signupValidation } from "./auth.validation.js";
+import { HME, multerValidation, myMulter } from "../../services/multer.js";
 const router = Router();
-router.post("/registerUser",validation(signupValidation),auth([role.admin]), userSignUp);
+router.post("/registerUser",auth([role.admin]),myMulter(multerValidation.pdf).single("img"),
+HME, userSignUp);
 router.post("/registerStudent",auth([role.admin]), studentSignUp);
 router.post("/signIn",validation(signInValidation), signIn);
 router.post("/sendCode", sendCode);
