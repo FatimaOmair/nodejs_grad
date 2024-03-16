@@ -1,12 +1,14 @@
 import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./DB/connection.js";
+import cors from "cors"
 import { adminRouter, authRouter, headRouter, studentRouter, supervisorRouter } from "./src/modules/index.router.js";
 dotenv.config();
 const app = express();
-const port = 3001 || process.env.PORT;
+const port = 3000 || process.env.PORT;
 connectDB();
 app.use(express.json());
+app.use(cors())
 const BASE_URL = process.env.BASE_URL;
 
 app.use(`${BASE_URL}auth`, authRouter);
