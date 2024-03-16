@@ -17,9 +17,7 @@ export const bookSection = async (req, res, next) => {
   export const submitTask = async (req, res, next) => {
     try {
         const { txt } = req.body;
-        const sectionId = req.user.sectionId;
-        const taskId = req.params.taskId; 
-        
+        const {sectionId, taskId} = req.params;
         const fileTask = await uploadFile(req.file.path);
         const submission = await submitModel.create({
             txt,
