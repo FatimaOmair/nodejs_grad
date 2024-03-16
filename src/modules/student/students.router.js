@@ -9,6 +9,6 @@ const router = Router();
 router.post('/bookSection',auth([role.student]),bookSection);
 router.get('/profile',auth([role.student]), viewProfile);
 router.patch('/editProfile',auth([role.student]), editProfile);
-router.post('/submitTask', myMulter(multerValidation.pdf).single("task"),
+router.post('/submitTask/:sectionId/:taskId', myMulter(multerValidation.pdf).single("task"),
 HME,submitTask);
 export default router;

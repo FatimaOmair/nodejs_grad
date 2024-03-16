@@ -11,4 +11,13 @@ router.get('/profile',auth([role.headOfDepartment]), viewProfile);
 router.patch('/editProfile', auth([role.headOfDepartment]), editProfile);
 router.patch('/updateSection/:sectionId', auth([role.headOfDepartment]), updateHeadSections);
 router.delete('/deleteStudents/:sectionId', deleteStudentsFromSection);
+
+router.use(auth([role.headOfDepartment]));
+router.post('/addSection',createSection)
+router.get('/getHeadSections',getHeadSections)
+router.delete('/deleteSection/:id',deleteSection)
+router.get('/profile', viewProfile);
+router.patch('/editProfile', editProfile);
+router.patch('/updateSection', updateHeadSections);
+
 export default router;

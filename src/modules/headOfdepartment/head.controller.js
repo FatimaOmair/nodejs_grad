@@ -1,4 +1,5 @@
 import { sectionModel } from "../../../DB/model/section.model.js";
+
 import { studentModel } from "../../../DB/model/student.model.js";
 import { userModel } from "../../../DB/model/user.model.js";
 
@@ -14,8 +15,9 @@ export const createSection = async (req, res, next) => {
 
 export const getHeadSections = async (req, res, next) => {
   try {
+
     const sections = await sectionModel.find({ depId: req.depId });
-    
+
     if (sections.length === 0) {
       return res.status(404).json({ message: "There are no sections available for your department." });
     }
@@ -46,6 +48,7 @@ export const deleteSection = async (req, res, next) => {
 
 export const updateHeadSections = async (req, res, next) => {
   try {
+
     const { supervisorId, studentIdsToAdd, studentIdsToDelete } = req.body;
     const sectionId = req.params.sectionId; 
     const section = await sectionModel.findById(sectionId);
@@ -93,6 +96,9 @@ export const updateHeadSections = async (req, res, next) => {
     await section.save();
 
     res.status(200).json({ message: "Section updated successfully", section });
+    const mySections = await sectionModel.find({ depId: req.depId });
+   return res.json(mySections);
+
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
