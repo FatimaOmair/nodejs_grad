@@ -5,10 +5,12 @@ import { studentModel } from "../../../DB/model/student.model.js";
 import { departmentModel } from "../../../DB/model/department.model.js";
 import { nanoid } from "nanoid";
 import sendEmail from "../../services/email.js";
+import { uploadFile } from "../../services/uploadFile.js";
 
 export const userSignUp = async (req, res, next) => {
   try {
     const { name, email, password, phoneNumber, role, depId,officeHours} = req.body;
+    const img = await uploadFile(req.file.path);
     const exitUser = await userModel.findOne({ email: email });
     
     if (exitUser) {
@@ -28,7 +30,8 @@ export const userSignUp = async (req, res, next) => {
         phoneNumber,
         role,
         depId,
-        officeHours
+        officeHours,
+        img
       });
     } else {
       user = await userModel.create({
@@ -37,6 +40,7 @@ export const userSignUp = async (req, res, next) => {
         password: hash,
         phoneNumber,
         role,
+        img
       });
     }
 
@@ -51,7 +55,7 @@ export const userSignUp = async (req, res, next) => {
 export const studentSignUp = async (req, res, next) => {
   try {
     const { name, email, password, phoneNumber, depId, academicYear, universityNum } = req.body;
-
+    const img = await uploadFile(req.file.path);
     const existingUser = await studentModel.findOne({ email: email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
@@ -71,7 +75,8 @@ export const studentSignUp = async (req, res, next) => {
       phoneNumber,
       depId,
       academicYear,
-      universityNum
+      universityNum,
+      file:img
     });
 
     res.status(201).json({ message: "Student created successfully", user });
