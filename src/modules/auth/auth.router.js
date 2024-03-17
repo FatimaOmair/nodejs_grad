@@ -8,7 +8,8 @@ import { HME, multerValidation, myMulter } from "../../services/multer.js";
 const router = Router();
 router.post("/registerUser",auth([role.admin]),myMulter(multerValidation.pdf).single("img"),
 HME, userSignUp);
-router.post("/registerStudent",auth([role.admin]), studentSignUp);
+router.post("/registerStudent",myMulter(multerValidation.pdf).single("img"),
+HME,auth([role.admin]), studentSignUp);
 router.post("/signIn",validation(signInValidation), signIn);
 router.post("/sendCode", sendCode);
 export default router;
