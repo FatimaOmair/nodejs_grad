@@ -76,7 +76,7 @@ export const studentSignUp = async (req, res, next) => {
       depId,
       academicYear,
       universityNum,
-      file:img
+      img
     });
 
     res.status(201).json({ message: "Student created successfully", user });
