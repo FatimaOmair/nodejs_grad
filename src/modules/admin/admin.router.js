@@ -37,7 +37,7 @@ router.post(
   HME,
   createProject
 );
-router.get("/getUsers", auth([role.admin]), getUsers);
+router.get("/getUsers", auth([role.admin,role.headOfDepartment]), getUsers);
 router.get("/getStudents", auth([role.admin]), getStudents);
 router.get("/getprojects/:id", getProjects);
 router.get("/getprojects", getAllProjects);
