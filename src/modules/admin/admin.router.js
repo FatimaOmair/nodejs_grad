@@ -29,7 +29,7 @@ router.post(
   auth([role.admin]),
   createDepartment
 );
-router.get("/getDep", auth([role.admin]), getDepartments);
+router.get("/getDep", getDepartments);
 router.post(
   "/addProject",
   auth([role.admin]),
