@@ -7,7 +7,7 @@ export const createSection = async (req, res, next) => {
   try {
     const { num, userId } = req.body;
     const section = await sectionModel.create({ num, depId:req.depId, userId });
-    return res.status(200).json(section);
+    return res.status(200).json({message:"success",section});
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
   }
