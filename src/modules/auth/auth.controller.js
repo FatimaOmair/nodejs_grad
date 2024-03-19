@@ -105,18 +105,25 @@ export const signIn = async (req, res, next) => {
         new Error("invalid account error in password", { cause: 400 })
       );
     }
+    let tokenPayload = {
+      _id: user._id,
+      email: user.email,
+      name: user.name,
+      depId:user.depId,
+    };
+    if (user instanceof studentModel) {
+      tokenPayload.academicYear = user.academicYear;
+    } else {
+      tokenPayload.officeHours = user.officeHours;
+    }
     const token = jwt.sign(
-      {
-        _id: user._id,
-        email: user.email,
-        name: user.name,
-        depId:user.depId,
-      },
+      tokenPayload,
       process.env.LOGINTOKEN,
       {
         expiresIn: 60 * 60 * 24 * 7 ,
       }
     );
+    console.log(tokenPayload)
     return res.status(200).json({ message: "valid account", token, role: user.role });
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
