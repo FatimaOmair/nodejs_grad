@@ -110,6 +110,7 @@ export const signIn = async (req, res, next) => {
       email: user.email,
       name: user.name,
       depId:user.depId,
+      img:user.img
     };
     if (user instanceof studentModel) {
       tokenPayload.academicYear = user.academicYear;
