@@ -9,6 +9,7 @@ import {
   getAllProjects,
   getDepartments,
   getProjects,
+  getStudent,
   getStudents,
   getUser,
   getUsers,
@@ -39,7 +40,8 @@ router.post(
   createProject
 );
 router.get("/getUsers", auth([role.admin,role.headOfDepartment]), getUsers);
-router.get("/getUser/:id", getUser);
+router.get("/getUser/:id",auth([role.admin]), getUser);
+router.get("/getStudent/:id",auth([role.admin]), getStudent);
 router.get("/getStudents", auth([role.admin]), getStudents);
 router.get("/getprojects/:id", getProjects);
 router.get("/getprojects", getAllProjects);
