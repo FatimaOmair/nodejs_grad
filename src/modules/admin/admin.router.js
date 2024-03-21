@@ -10,6 +10,7 @@ import {
   getDepartments,
   getProjects,
   getStudents,
+  getUser,
   getUsers,
   updateStudent,
   updateSupervisor,
@@ -38,6 +39,7 @@ router.post(
   createProject
 );
 router.get("/getUsers", auth([role.admin,role.headOfDepartment]), getUsers);
+router.get("/getUser/:id", getUser);
 router.get("/getStudents", auth([role.admin]), getStudents);
 router.get("/getprojects/:id", getProjects);
 router.get("/getprojects", getAllProjects);
