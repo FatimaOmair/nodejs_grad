@@ -30,6 +30,18 @@ export const getUsers = async (req, res, next) => {
     next(new Error(err.message, { cause: 500 }));
   }
 };
+export const getUser = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const user = await userModel.findById(id);
+    if(!user){
+      return res.json({message :"No user"});
+    }
+    res.status(200).json({ message: "success", user });
+  } catch (err) {
+    next(new Error(err.message, { cause: 500 }));
+  }
+};
 
 export const getStudents = async (req, res, next) => {
   try {
