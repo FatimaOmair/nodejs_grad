@@ -76,5 +76,17 @@ export const giveFeedback = async (req, res, next) => {
   }
 };
 
+export const supervisorRequests = async (req, res, next) => {
+  try {
+    const supervisorId = req.userId; 
+    const sections = await sectionModel.find({ userId: supervisorId });
+    const sectionIds = sections.map(section => section._id);
+    const requests = await requestModel.find({ sectionId: { $in: sectionIds } });
+                                    
+    return res.status(200).json({ requests });
+  } catch (err) {
+    next(new Error(err.message, { cause: 500 }));
+  }
+};
 
 
