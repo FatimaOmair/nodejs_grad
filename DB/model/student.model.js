@@ -42,7 +42,7 @@ const studentSchema = new Schema(
     },
     universityNum:{
       type: String,
-      
+      required: true,
     }
   },
   { timestamps: true }
