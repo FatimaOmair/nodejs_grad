@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { assignTask, confirm,getMySections, giveFeedback, reject} from "./super.controller.js";
+import { assignTask, confirm,getMySections, giveFeedback, reject, supervisorRequests} from "./super.controller.js";
 import { role } from "../../services/role.js";
 import { auth } from "../../middleWare/auth.js";
 import { HME, multerValidation, myMulter } from "../../services/multer.js";
@@ -13,4 +13,5 @@ HME,assignTask);
 router.post('/feedback/:id', giveFeedback);
 router.get('/profile',auth([role.supervisor]), viewProfile);
 router.patch('/editProfile', auth([role.supervisor]), editProfile);
+router.get('/requests', auth([role.supervisor]),supervisorRequests);
 export default router;
