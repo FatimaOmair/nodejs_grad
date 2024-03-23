@@ -60,6 +60,10 @@ export const studentSignUp = async (req, res, next) => {
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
+    const existingUserNum = await studentModel.findOne({ universityNum:universityNum });
+    if (existingUserNum) {
+      return res.status(400).json({ message: "User already exists" });
+    }
 
     const existingDepartment = await departmentModel.findById(depId);
     if (!existingDepartment) {
