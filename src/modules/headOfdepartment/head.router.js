@@ -4,7 +4,7 @@ import { auth } from "../../middleWare/auth.js";
 import { role } from "../../services/role.js";
 import { editProfile, viewProfile } from "../../services/profile.js";
 const router = Router();
-router.get('/getHeadSections',auth([role.headOfDepartment,role.student]),getHeadSections)
+router.get('/getHeadSections',auth([role.headOfDepartment,role.student,role.supervisor]),getHeadSections)
 router.post('/addSection',auth([role.headOfDepartment]),createSection)
 router.get('/getHeadSections',auth([role.headOfDepartment]),getHeadSections)
 router.delete('/deleteSection/:id',auth([role.headOfDepartment]),deleteSection)

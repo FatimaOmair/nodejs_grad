@@ -40,11 +40,10 @@ router.post(
   HME,
   createProject
 );
+router.get("/getUser/:id",auth([role.admin,role.student,role.headOfDepartment,role.supervisor]), getUser);
 router.get("/getUsers", auth([role.admin,role.headOfDepartment]), getUsers);
-router.get("/getUser/:id",auth([role.admin,role.student,role.headOfDepartment]), getUser);
-router.get("/getStudent/:id",auth([role.admin,role.headOfDepartment]), getStudent);
+router.get("/getStudent/:id",auth([role.admin,role.headOfDepartment,role.supervisor,role.student]), getStudent);
 router.get("/getPerson", auth([role.headOfDepartment]), getPerson);
-router.get("/getStudent/:id",auth([role.admin]), getStudent);
 router.get("/getStudents", auth([role.admin]), getStudents);
 router.get("/getprojects/:id", getProjects);
 router.get("/getprojects", getAllProjects);
