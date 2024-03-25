@@ -33,7 +33,7 @@ export const confirm = async (req, res, next) => {
       { state: "accept" },
       { new: true }
     );
-    await sectionModel.findByIdAndUpdate(req.body.sectionId, { students: arr });
+    await sectionModel.findByIdAndUpdate(req.body.sectionId, { students: arr,visible: false });
     return res.status(201).json(request);
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
@@ -44,6 +44,16 @@ export const getMySections = async (req, res, next) => {
   try {
     const section = await sectionModel.find({ userId: req.userId });
     return res.status(200).json(section);
+  } catch (err) {
+    next(new Error(err.message, { cause: 500 }));
+  }
+};
+
+export const getSectionNum = async (req, res, next) => {
+  try {
+    const {id}=req.params;
+    const section = await sectionModel.findById(id);
+    return res.status(200).json(section.num);
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
   }
