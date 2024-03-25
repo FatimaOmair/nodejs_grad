@@ -14,6 +14,18 @@ export const bookSection = async (req, res, next) => {
     }
   };
 
+  export const getStudentSection = async (req, res, next) => {
+    try {
+      const section = await sectionModel.findOne({ students: req.userId });
+  
+      if (!section) {
+        return res.status(404).json({ message: "Section not found for this student" });
+      }
+      return res.status(200).json({ section });
+    } catch (err) {
+      next(new Error(err.message, { cause: 500 }));
+    }
+  }
   export const submitTask = async (req, res, next) => {
     try {
         const { txt } = req.body;
