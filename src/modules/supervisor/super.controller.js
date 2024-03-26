@@ -61,10 +61,11 @@ export const getSectionNum = async (req, res, next) => {
 
 export const assignTask = async (req, res, next) => {
   try {
-    const { txt, sections } = req.body;
+    const { txt, sections,startDate,endDate } = req.body;
+    const supervisorId = req.userId;
     const fileTask = await uploadFile(req.file.path);
-    const task = await taskModel.create({ txt, sections, file: fileTask });
-    return res.status(201).json(task);
+    const task = await taskModel.create({ txt, sections,startDate, endDate, file: fileTask,supervisor:supervisorId });
+    return res.status(201).json({message:"success",task});
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
   }
@@ -98,5 +99,26 @@ export const supervisorRequests = async (req, res, next) => {
     next(new Error(err.message, { cause: 500 }));
   }
 };
+export const getSupervisorTask = async (req, res, next) => {
+  try {
+    const supervisorId = req.userId;
+    const tasks = await taskModel.find({ supervisor: supervisorId });
+    return res.json({ tasks });
+  } catch (err) {
+    next(new Error(err.message, { cause: 500 }));
+  }
+};
 
+export const updateTask = async (req, res, next) => {
+  try{
+    const {id}= req.params;
+    const { txt, sections,startDate,endDate } = req.body;
+    const supervisorId = req.userId;
+    const fileTask = await uploadFile(req.file.path);
+    const task = await taskModel.findByIdAndUpdate(id,{ txt, sections,startDate, endDate, file: fileTask,supervisor:supervisorId },{new:true});
+    return res.status(201).json({message:"success",task});
+  }catch (err) {
+    next(new Error(err.message, { cause: 500 }));
+  }
+};
 
