@@ -13,6 +13,18 @@ const taskSchema = new Schema(
       type:[{type: Types.ObjectId,ref:"section"}],
       required: true,
     },
+    supervisor:{
+      type: Types.ObjectId,
+      ref:"user"
+    },
+    startDate:{
+      type: Date,
+      required: true,
+    },
+    endDate:{
+      type: Date,
+      required: true,
+    }
     
    
   },
