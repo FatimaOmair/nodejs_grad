@@ -130,4 +130,13 @@ export const updateTask = async (req, res, next) => {
     next(new Error(err.message, { cause: 500 }));
   }
 };
+export const deleteTask = async (req, res, next) => {
+  try{
+    const {id}= req.params;
+    const task = await taskModel.findOneAndDelete({_id:id});
+    return res.status(201).json({message:"success",task});
+  }catch (err) {
+    next(new Error(err.message, { cause: 500 }));
+  }
+};
 

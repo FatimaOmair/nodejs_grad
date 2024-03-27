@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { assignTask, confirm,getMySections, getSectionNum, getSupervisorTask, getTaskById, giveFeedback, reject, supervisorRequests, updateTask} from "./super.controller.js";
+import { assignTask, confirm,deleteTask,getMySections, getSectionNum, getSupervisorTask, getTaskById, giveFeedback, reject, supervisorRequests, updateTask} from "./super.controller.js";
 import { role } from "../../services/role.js";
 import { auth } from "../../middleWare/auth.js";
 import { HME, multerValidation, myMulter } from "../../services/multer.js";
@@ -7,6 +7,7 @@ import { editProfile, viewProfile } from "../../services/profile.js";
 const router = Router();
 router.post('/reject',reject);
 router.post('/confirm',confirm);
+router.get('/getTask/:id',auth([role.supervisor,role.student]),getTaskById);
 router.get('/getSections',auth([role.supervisor]),getMySections);
 router.get('/getSectionNum/:id',auth([role.supervisor]),getSectionNum);
 router.post('/assignTask', myMulter(multerValidation.pdf).single("task"),
@@ -18,5 +19,5 @@ router.get('/requests', auth([role.supervisor]),supervisorRequests);
 router.get('/getSuperTask', auth([role.supervisor]),getSupervisorTask);
 router.patch('/editTask/:id',myMulter(multerValidation.pdf).single("task"),
 HME, auth([role.supervisor]),updateTask);
-router.get('/getTask/:id',auth([role.supervisor]),getTaskById);
+router.delete('/DeleteTask/:id',auth([role.supervisor]),deleteTask);
 export default router;
