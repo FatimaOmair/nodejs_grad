@@ -1,6 +1,7 @@
 import { requestModel } from "../../../DB/model/request.model.js";
 import { sectionModel } from "../../../DB/model/section.model.js";
 import { submitModel } from "../../../DB/model/submit.model.js";
+import { taskModel } from "../../../DB/model/task.model.js";
 import { uploadFile } from "../../services/uploadFile.js";
 
 export const bookSection = async (req, res, next) => {
@@ -26,6 +27,20 @@ export const bookSection = async (req, res, next) => {
       next(new Error(err.message, { cause: 500 }));
     }
   }
+
+  export const getStudentTask = async (req,res,nex) => {
+    try {
+      const studentId= req.userId;
+      const section = await sectionModel.findOne({ students: studentId });
+      if (!section) {
+        return res.json('Student is not assigned to any section');
+      }
+      const tasks = await taskModel.find({ sections: section._id });
+      return res.json({message:"success",tasks}) ;
+    } catch (error) {
+      next(new Error(err.message, { cause: 500 }));
+    }
+  };
   export const submitTask = async (req, res, next) => {
     try {
         const { txt } = req.body;
