@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { assignTask, confirm,getMySections, getSectionNum, getSupervisorTask, giveFeedback, reject, supervisorRequests, updateTask} from "./super.controller.js";
+import { assignTask, confirm,getMySections, getSectionNum, getSupervisorTask, getTaskById, giveFeedback, reject, supervisorRequests, updateTask} from "./super.controller.js";
 import { role } from "../../services/role.js";
 import { auth } from "../../middleWare/auth.js";
 import { HME, multerValidation, myMulter } from "../../services/multer.js";
@@ -18,4 +18,5 @@ router.get('/requests', auth([role.supervisor]),supervisorRequests);
 router.get('/getSuperTask', auth([role.supervisor]),getSupervisorTask);
 router.patch('/editTask/:id',myMulter(multerValidation.pdf).single("task"),
 HME, auth([role.supervisor]),updateTask);
+router.get('/getTask/:id',auth([role.supervisor]),getTaskById);
 export default router;

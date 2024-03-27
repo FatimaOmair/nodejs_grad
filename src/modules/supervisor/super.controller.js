@@ -108,6 +108,15 @@ export const getSupervisorTask = async (req, res, next) => {
     next(new Error(err.message, { cause: 500 }));
   }
 };
+export const getTaskById = async (req, res, next) => {
+  try {
+    const {id} = req.params;
+    const tasks = await taskModel.findById(id);
+    return res.json({ message:"success",tasks });
+  } catch (err) {
+    next(new Error(err.message, { cause: 500 }));
+  }
+};
 
 export const updateTask = async (req, res, next) => {
   try{
