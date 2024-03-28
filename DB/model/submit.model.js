@@ -3,11 +3,9 @@ const submitSchema = new Schema(
   {
     txt: {
       type: String,
-      required: true,
     },
     file: {
       type: String,
-      required: true,
     },
     section: {
       type: Types.ObjectId,
