@@ -1,5 +1,6 @@
 import { requestModel } from "../../../DB/model/request.model.js";
 import { sectionModel } from "../../../DB/model/section.model.js";
+import { submitModel } from "../../../DB/model/submit.model.js";
 import { taskModel } from "../../../DB/model/task.model.js";
 import { getUser } from "../../services/getId.js";
 import { uploadFile } from "../../services/uploadFile.js";
@@ -73,15 +74,14 @@ export const assignTask = async (req, res, next) => {
 
 export const giveFeedback = async (req, res, next) => {
   try {
-    const {  feedback } = req.body;
-    const {id}=req.params
-    const task = await taskModel.findById(id);
+    const {  feedback , taskId} = req.body;
+    const task = await taskModel.findById(taskId);
     if (!task) {
       return res.status(404).json({ message: "Task not found" });
     }
     task.feedback = feedback;
     await task.save();
-    return res.status(200).json({ message: "Feedback submitted successfully", feedback ,task });
+    return res.status(200).json({ message: "success", feedback ,task });
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
   }
@@ -137,6 +137,17 @@ export const deleteTask = async (req, res, next) => {
     return res.status(201).json({message:"success",task});
   }catch (err) {
     next(new Error(err.message, { cause: 500 }));
+  }
+};
+
+export const getSupervisorSubmissions = async (req, res, next) => {
+  try {
+      const tasks = await taskModel.find({ supervisor: req.userId });
+      const taskIds = tasks.map(task => task._id);
+      const submissions = await submitModel.find({ taskId: { $in: taskIds } }).populate('taskId');
+      return res.status(200).json({ message: "success", submissions });
+  } catch (error) {
+      next(new Error(error.message, { cause: 500 }));
   }
 };
 
