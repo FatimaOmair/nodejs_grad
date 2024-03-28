@@ -45,14 +45,17 @@ export const bookSection = async (req, res, next) => {
     try {
         const { txt } = req.body;
         const {sectionId, taskId} = req.params;
-        const fileTask = await uploadFile(req.file.path);
+        let fileTask;
+        if (req.file) {
+          fileTask = await uploadFile(req.file.path);
+        }
         const submission = await submitModel.create({
             txt,
             section: sectionId,
             taskId,
             file: fileTask
         });
-        return res.status(201).json({ message: "Task submitted successfully", submission });
+        return res.status(201).json({ message: "success", submission });
     } catch (err) {
         next(new Error(err.message, { cause: 500 }));
     }
