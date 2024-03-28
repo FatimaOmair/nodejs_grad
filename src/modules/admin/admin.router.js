@@ -14,6 +14,7 @@ import {
   getStudents,
   getUser,
   getUsers,
+  technicalSupport,
   updateStudent,
   updateSupervisor,
 } from "./admin.controller.js";
@@ -53,4 +54,5 @@ router.delete("/deleteProject/:id", auth([role.admin]), deleteProject);
 router.patch("/updateSupervisor/:id", auth([role.admin]), updateSupervisor);
 router.patch("/updateStudent/:id", auth([role.admin]), updateStudent);
 router.delete("/deleteDep/:id", auth([role.admin]), deleteDepartment);
+router.post("/technicalSupport", technicalSupport);
 export default router;
