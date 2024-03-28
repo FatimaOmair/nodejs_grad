@@ -4,6 +4,8 @@ import { studentModel } from "../../../DB/model/student.model.js";
 import { projectModel } from "../../../DB/model/project.model.js";
 import bcrypt from "bcryptjs";
 import { uploadFile } from "../../services/uploadFile.js";
+import sendEmail from "../../services/email.js";
+
 export const createDepartment = async (req, res, next) => {
   try {
     const { name} = req.body;
@@ -200,3 +202,18 @@ export const deleteDepartment = async (req, res, next) => {
     next(new Error(err.message, { cause: 500 }));
   }
 };
+
+export const technicalSupport = async (req, res) => {
+  const { name, email, subject, message } = req.body;
+  
+  try {
+    const m= `My name is: ${name}`
+    console.log(process.env.PASSWORD)
+    await sendEmail(email, subject, m,message);
+    console.log('Email sent successfully.');
+    res.status(200).send('Email sent successfully.');
+  } catch (error) {
+    console.error('Error sending email:', error);
+    res.status(500).send('Failed to send email.');
+  }}
+
