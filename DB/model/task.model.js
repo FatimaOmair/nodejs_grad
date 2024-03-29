@@ -24,6 +24,9 @@ const taskSchema = new Schema(
     endDate:{
       type: Date,
       required: true,
+    },
+    feedback:{
+      type: String,
     }
     
    
