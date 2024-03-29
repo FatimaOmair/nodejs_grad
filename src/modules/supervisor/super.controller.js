@@ -14,7 +14,7 @@ export const reject = async (req, res, next) => {
       { new: true }
     );
     await sectionModel.findByIdAndUpdate(req.body.sectionId, { visible: true });
-    return res.status(201).json(request);
+    return res.status(201).json({message:"success",request});
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
   }
@@ -35,7 +35,7 @@ export const confirm = async (req, res, next) => {
       { new: true }
     );
     await sectionModel.findByIdAndUpdate(req.body.sectionId, { students: arr,visible: false });
-    return res.status(201).json(request);
+    return res.status(201).json({message:"success",request});
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
   }
