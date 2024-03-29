@@ -79,9 +79,12 @@ export const giveFeedback = async (req, res, next) => {
     if (!task) {
       return res.status(404).json({ message: "Task not found" });
     }
-    task.feedback = feedback;
-    await task.save();
-    return res.status(200).json({ message: "success", feedback ,task });
+    const feed = await taskModel.findByIdAndUpdate(
+      taskId,
+      { feedback },
+      { new: true }
+    );
+    return res.status(200).json({ message: "success", feed });
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
   }
