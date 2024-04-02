@@ -87,6 +87,7 @@ const sendEmail = async (dest, subject, m ,message) => {
     </div>
     <div class="footer">
       <p> [Palestine Technical University Khadoorie]</p>
+      <p>${dest}</p>
     </div>
   </div>
 </body>
