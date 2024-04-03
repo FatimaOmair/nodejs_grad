@@ -1,9 +1,9 @@
 import { model, Schema, Types } from "mongoose";
 const requestSchema = new Schema(
   {
-    text: {
-      type: String,
-      required: true,
+    students:{
+      type:[{type: Types.ObjectId,ref:"student"}],
+      required:false,
     },
     sectionId: {
       type: Types.ObjectId,
