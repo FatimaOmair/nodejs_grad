@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { bookSection, getStudentSection, getStudentTask, submitTask} from "./student.controller.js";
+import { bookSection, checkSubmissionForTask, getStudentSection, getStudentTask, submitTask} from "./student.controller.js";
 import { auth } from "../../middleWare/auth.js";
 import { role } from "../../services/role.js";
 import { editProfile, viewProfile } from "../../services/profile.js";
@@ -12,4 +12,5 @@ router.post('/submitTask/:sectionId/:taskId', myMulter(multerValidation.pdf).sin
 HME,submitTask);
 router.get("/section",auth([role.student]), getStudentSection);
 router.get("/getMyTask",auth([role.student]),getStudentTask);
+router.get("/getSubmission",auth([role.student]),checkSubmissionForTask);
 export default router;

@@ -82,6 +82,22 @@ export const bookSection = async (req, res, next) => {
     }
 };
 
+export const checkSubmissionForTask = async (req, res, next) => {
+    try {
+        const { sectionId, taskId } = req.query;
+        const submission = await submitModel.findOne({ section: sectionId, taskId });
+        console.log(submission);
+        if (submission) {
+            return res.status(200).json({ message: "true", submission });
+        } else {
+            return res.status(200).json({ message: "false" });
+        }
+    } catch (err) {
+        next(new Error(err.message, { cause: 500 }));
+    }
+};
+
+
   
   
   
