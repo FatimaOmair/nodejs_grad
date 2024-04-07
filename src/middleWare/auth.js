@@ -13,22 +13,25 @@ export const auth = (accessRoles = []) => {
       const decoded = await jwt.verify(token, process.env.LOGINTOKEN);
 
       let user = await userModel.findOne({
-        email:decoded.email,
+        email: decoded.email,
       });
+
       if (!user) {
         user = await studentModel.findOne({
           email: decoded.email,
         });
       }
-      
+
       if (!user) {
         return next(new Error("User not found", { cause: 404 }));
       }
-      
-      if (!accessRoles.includes(user.role)) {
+
+      const userRoles = Array.isArray(user.role) ? user.role : [user.role];
+
+      if (!accessRoles.some(role => userRoles.includes(role))) {
         return next(new Error("Unauthorized", { cause: 401 }));
       }
-      
+
       req.user = user;
       req.userId = decoded._id;
       req.depId = decoded.depId;
