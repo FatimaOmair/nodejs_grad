@@ -1,4 +1,5 @@
 import { model, Schema, Types } from "mongoose";
+
 const userSchema = new Schema(
   {
     name: {
@@ -33,15 +34,15 @@ const userSchema = new Schema(
       default: null,
     },
     role: {
-      type: String,
-      enum: ["admin", "headOfDepartment", "supervisor"],
+      type: [{ type: String, enum: ["admin", "headOfDepartment", "supervisor"] }],
       required: true,
     },
     officeHours: {
       type: String,
-      required:false,
+      required: false,
     }
   },
   { timestamps: true }
 );
+
 export const userModel = model("user", userSchema);
