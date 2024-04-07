@@ -88,13 +88,32 @@ export const checkSubmissionForTask = async (req, res, next) => {
         const submission = await submitModel.findOne({ section: sectionId, taskId });
         console.log(submission);
         if (submission) {
-            return res.status(200).json({ message: "true", submission });
+            return res.status(200).json({ message: true, submission });
         } else {
-            return res.status(200).json({ message: "false" });
+            return res.status(200).json({ message: false });
         }
     } catch (err) {
         next(new Error(err.message, { cause: 500 }));
     }
+};
+export const editSubmission = async (req, res, next) => {
+  try {
+      const { txt } = req.body;
+      const {sectionId, taskId} = req.params;
+      let fileTask;
+      if (req.file) {
+        fileTask = await uploadFile(req.file.path);
+      }
+      const submission = await submitModel.create({
+          txt,
+          section: sectionId,
+          taskId,
+          file: fileTask
+      });
+      return res.status(201).json({ message: "success", submission });
+  } catch (err) {
+      next(new Error(err.message, { cause: 500 }));
+  }
 };
 
 
