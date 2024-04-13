@@ -35,6 +35,7 @@ export const auth = (accessRoles = []) => {
       req.user = user;
       req.userId = decoded._id;
       req.depId = decoded.depId;
+      req.img=decoded.img;
       next();
     } catch (err) {
       next(new Error("Failed to authenticate", { cause: 400 }));
