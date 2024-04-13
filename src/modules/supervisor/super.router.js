@@ -3,7 +3,7 @@ import { assignTask, confirm,deleteTask,getMySections, getRequestById, getSectio
 import { role } from "../../services/role.js";
 import { auth } from "../../middleWare/auth.js";
 import { HME, multerValidation, myMulter } from "../../services/multer.js";
-import { editProfile, viewProfile } from "../../services/profile.js";
+import { editProfile, editProfileImg, viewProfile } from "../../services/profile.js";
 const router = Router();
 router.post('/reject',reject);
 router.post('/confirm',confirm);
@@ -15,6 +15,8 @@ HME,auth([role.supervisor]),assignTask);
 router.post('/feedback', giveFeedback);
 router.get('/profile',auth([role.supervisor]), viewProfile);
 router.patch('/editProfile', auth([role.supervisor]), editProfile);
+router.patch('/editProfileImg',auth([role.headOfDepartment]),myMulter(multerValidation.pdf).single("img"),
+HME, editProfileImg);
 router.get('/requests', auth([role.supervisor]),supervisorRequests);
 router.get('/getSuperTask', auth([role.supervisor]),getSupervisorTask);
 router.patch('/editTask/:id',myMulter(multerValidation.pdf).single("task"),
