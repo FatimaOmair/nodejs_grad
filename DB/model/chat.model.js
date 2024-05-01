@@ -1,7 +1,6 @@
-import mongoose, { Schema } from "mongoose";
+import { Schema } from "mongoose";
 import { Types } from "mongoose";
 import { model } from "mongoose";
-import { userChatModel } from "./userChat.model.js";
 const chatSchema = new Schema(
   {
     isGroup: {
@@ -24,22 +23,10 @@ const chatSchema = new Schema(
     },
   },
   
-  { timestamps: true,
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true }}, 
+  { timestamps: true}, 
 );
-chatSchema.virtual('populatedUsers', {
-  ref: 'userChat',
-  localField: 'users', // This is the field in chatSchema
-  foreignField: '_id', // This is the field in userChatModel
-  justOne: false,
-  options: { 
-    populate: [
-      { path: 'populatedSuperId'},
-      { path: 'populatedStudents'} 
-    ]
-  }
-});
+
+
  
  export const chatModel = model("chat", chatSchema);
  

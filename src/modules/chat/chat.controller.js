@@ -2,9 +2,7 @@ import {chatModel} from "../../../DB/model/chat.model.js";
 import { messageModel } from "../../../DB/model/message.model.js";
 import { studentModel } from "../../../DB/model/student.model.js";
 import { userModel } from "../../../DB/model/user.model.js";
-import { userChatModel } from "../../../DB/model/userChat.model.js";
 
-// Update the fetchChat function
 export const fetchChat = async (req, res, next) => {
   try {
     let chats=null
