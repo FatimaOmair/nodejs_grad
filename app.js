@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./DB/connection.js";
 import cors from "cors"
-import { adminRouter, authRouter, headRouter, studentRouter, supervisorRouter } from "./src/modules/index.router.js";
+import { adminRouter, authRouter, headRouter, studentRouter, supervisorRouter,chatRouter } from "./src/modules/index.router.js";
 dotenv.config();
 const app = express();
 const port = 3000 || process.env.PORT;
@@ -16,6 +16,7 @@ app.use(`${BASE_URL}admin`, adminRouter);
 app.use(`${BASE_URL}head`,headRouter);
 app.use(`${BASE_URL}student`,studentRouter);
 app.use(`${BASE_URL}supervisor`,supervisorRouter);
+app.use(`${BASE_URL}chat`,chatRouter);
 app.use("*", (req, res) => {
   res.status(404).json({ message: "page is not found" });
 });
