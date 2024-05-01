@@ -6,7 +6,7 @@ import { HME, multerValidation, myMulter } from "../../services/multer.js";
 import { editProfile, editProfileImg, viewProfile } from "../../services/profile.js";
 const router = Router();
 router.post('/reject',reject);
-router.post('/confirm',confirm);
+router.post('/confirm',auth([role.supervisor]),confirm);
 router.get('/getTask/:id',auth([role.supervisor,role.student]),getTaskById);
 router.get('/getSections',auth([role.supervisor]),getMySections);
 router.get('/getSectionNum/:id',auth([role.supervisor]),getSectionNum);
