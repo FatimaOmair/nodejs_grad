@@ -1,7 +1,11 @@
+import { chatModel } from "../../../DB/model/chat.model.js";
 import { requestModel } from "../../../DB/model/request.model.js";
 import { sectionModel } from "../../../DB/model/section.model.js";
+import { studentModel } from "../../../DB/model/student.model.js";
 import { submitModel } from "../../../DB/model/submit.model.js";
 import { taskModel } from "../../../DB/model/task.model.js";
+import { userModel } from "../../../DB/model/user.model.js";
+import { userChatModel } from "../../../DB/model/userChat.model.js";
 import { getUser } from "../../services/getId.js";
 import { uploadFile } from "../../services/uploadFile.js";
 
@@ -22,18 +26,28 @@ export const reject = async (req, res, next) => {
 
 export const confirm = async (req, res, next) => {
   try {
-    const {  students } = req.body;
+    const { students } = req.body;
     const request = await requestModel.findByIdAndUpdate(
       req.body.requestId,
       { state: "accept" },
       { new: true }
     );
-    await sectionModel.findByIdAndUpdate(req.body.sectionId, { students,visible: false });
-    return res.status(201).json({message:"success",request});
+    await sectionModel.findByIdAndUpdate(req.body.sectionId, { students, visible: false });
+  
+
+    // Create the group chat
+    const groupChat = await chatModel.create({
+        users:students,
+        isGroup: true,
+        groupAdmin: req.userId,
+    });
+    return res.status(201).json({ message: "success", request });
+    
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
   }
 };
+
 
 export const getMySections = async (req, res, next) => {
   try {
