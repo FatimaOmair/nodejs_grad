@@ -11,7 +11,7 @@ router.post('/addSection',createSection)
 router.delete('/deleteSection/:id',deleteSection)
 router.get('/profile', viewProfile);
 router.patch('/editProfile', editProfile);
-router.patch('/editProfileImg',auth([role.headOfDepartment]),myMulter(multerValidation.pdf).single("img"),
+router.patch('/editProfileImg',myMulter(multerValidation.pdf).single("img"),
 HME, editProfileImg);
 router.patch('/updateSection', updateHeadSections);
 
