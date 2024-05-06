@@ -15,7 +15,7 @@ HME,auth([role.supervisor]),assignTask);
 router.post('/feedback', giveFeedback);
 router.get('/profile',auth([role.supervisor]), viewProfile);
 router.patch('/editProfile', auth([role.supervisor]), editProfile);
-router.patch('/editProfileImg',auth([role.headOfDepartment]),myMulter(multerValidation.pdf).single("img"),
+router.patch('/editProfileImg',auth([role.supervisor]),myMulter(multerValidation.pdf).single("img"),
 HME, editProfileImg);
 router.get('/requests', auth([role.supervisor]),supervisorRequests);
 router.get('/getSuperTask', auth([role.supervisor]),getSupervisorTask);
