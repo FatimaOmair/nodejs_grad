@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken"
 import { studentModel } from "../../../DB/model/student.model.js";
 import { departmentModel } from "../../../DB/model/department.model.js";
 import { nanoid } from "nanoid";
-import sendEmail from "../../services/email.js";
+import verifyCode from "../../services/verifyCode.js";
 import { uploadFile } from "../../services/uploadFile.js";
 
 export const userSignUp = async (req, res, next) => {
@@ -139,26 +139,25 @@ export const signIn = async (req, res, next) => {
 export const sendCode = async (req, res, next) => {
   try {
     const { email } = req.body;
-    let user = await studentModel.findOne({ email }).select("email role");
+    let user = await studentModel.findOne({ email }).select("email");
     let supervisor = false;
     if (!user) {
-      user = await userModel.findOne({ email }).select("email role");
+      user = await userModel.findOne({ email }).select("email");
       supervisor = true;
     }
     if (!user) {
       next(new Error("cant find user", { cause: 404 }));
     } else {
       const code = nanoid();
-      await sendEmail(email, "Forget password", `verify code : ${code}`);
+      await verifyCode(email,  code);
+
       if (supervisor) {
         await userModel.findOneAndUpdate({ email }, { sendCode: code });
       } else {
         await studentModel.findOneAndUpdate({ email }, { sendCode: code });
       }
-
-      res.status(200).json({ message: "ok", role: user.role });
+      res.status(200).json({ message: "success", role: user.role });
     }
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
-  }
-};
+  }};
