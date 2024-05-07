@@ -161,3 +161,78 @@ export const sendCode = async (req, res, next) => {
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
   }};
+
+
+  
+  export const changePassword = async (req, res, next) => {
+    try {
+      const { password, email } = req.body;
+      const hash = await bcrypt.hash(password, parseInt(process.env.SALTROUND));
+       let updatedModel;
+      let user = await studentModel.findOne({ email }).select("email");
+      updatedModel=studentModel
+      if (!user) {
+        user = await userModel.findOne({ email }).select("email");
+        updatedModel=userModel
+        
+      }else{
+        return res.status(404).json({ error: "User not found" });
+      }
+  
+      
+  
+      const updated = await updatedModel.findOneAndUpdate(
+        { email: email },
+        { password: hash }
+      );
+  
+      console.log("Update result:", updated);
+  
+      if (updated) {
+        return res.status(200).json({ message: "success" });
+      } 
+     
+        return res.status(500).json({ error: "Failed to update password" });
+      
+    } catch (err) {
+      console.error("Update error:", err); 
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  };
+  
+  
+  
+  
+  
+  
+
+  export const veriFyCode = async (req, res, next) => {
+    try {
+      const { code, email } = req.body;
+      if (!code) {
+        next(new Error("enter coce password", { cause: 404 }));
+      }
+      let updated;
+      
+        updated = await userModel.findOneAndUpdate(
+          { email: email, sendCode: code },
+          { sendCode: "yes" }
+        );
+       if(!updated) {
+        updated = await studentModel.findOneAndUpdate(
+          { email: email, sendCode: code },
+          { sendCode: "yes" }
+        );
+      }
+      if (updated) {
+        res.status(200).json({ message: "success" });
+      } else {
+        return next(new Error("enter valid code", { cause: 500 }));
+      }
+    } catch (err) {
+      return next(new Error("internal error", { cause: 500 }));
+    }
+  };
+  
+  
+  
