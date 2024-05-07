@@ -65,17 +65,12 @@ export const editProfile = async (req, res, next) => {
 
 export const editProfileImg = async (req, res, next) => {
   const userId = req.userId;
-  console.log(userId)
   const img = await uploadFile(req.file.path);
-  let user = null;
   try {
-     user = await userModel.findById(userId);
+    const user = await userModel.findById(userId);
 
     if (!user) {
-      user = await studentModel.findById(userId);
-    }
-    if (!user) {
-      return res.status(404).json({ message: "User not found"})
+      return res.status(404).json({ message: "User not found" });
     }
     user.img = img;
     await user.save();

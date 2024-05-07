@@ -16,6 +16,20 @@ const io = new Server(server, { // Create Socket.IO server instance attached to 
   },
 });
 const port = process.env.PORT || 3000;
+const WebSocket = require('ws');
+
+const wss = new WebSocket.Server({ port: 8080 });
+
+wss.on('connection', (ws) => {
+  ws.on('message', (message) => {
+    // Broadcast message to all connected clients
+    wss.clients.forEach((client) => {
+      if (client !== ws && client.readyState === WebSocket.OPEN) {
+        client.send(message);
+      }
+    });
+  });
+});
 
 connectDB();
 

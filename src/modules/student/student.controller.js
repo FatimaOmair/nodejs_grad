@@ -10,8 +10,9 @@ export const bookSection = async (req, res, next) => {
       const { students, studentId, sectionId } = req.body;
       const studentObjectIds = [];
       for (let i = 0; i < students.length; i++) {
-          const student = await getUser(students[i]);
-          if (student) {
+        const student = await getUser(students[i]);
+
+        if (student) {
               studentObjectIds.push(student._id);
           } else {
               return res.status(400).json({ message: `Student with university number ${students[i]} not found` });

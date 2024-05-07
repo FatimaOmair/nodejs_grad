@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken"
 import { studentModel } from "../../../DB/model/student.model.js";
 import { departmentModel } from "../../../DB/model/department.model.js";
 import { nanoid } from "nanoid";
-import verifyCode from "../../services/verifyCode.js";
+import sendEmail from "../../services/email.js";
 import { uploadFile } from "../../services/uploadFile.js";
 
 export const userSignUp = async (req, res, next) => {
@@ -139,100 +139,26 @@ export const signIn = async (req, res, next) => {
 export const sendCode = async (req, res, next) => {
   try {
     const { email } = req.body;
-    let user = await studentModel.findOne({ email }).select("email");
+    let user = await studentModel.findOne({ email }).select("email role");
     let supervisor = false;
     if (!user) {
-      user = await userModel.findOne({ email }).select("email");
+      user = await userModel.findOne({ email }).select("email role");
       supervisor = true;
     }
     if (!user) {
       next(new Error("cant find user", { cause: 404 }));
     } else {
       const code = nanoid();
-      await verifyCode(email,  code);
-
+      await sendEmail(email, "Forget password", `verify code : ${code}`);
       if (supervisor) {
         await userModel.findOneAndUpdate({ email }, { sendCode: code });
       } else {
         await studentModel.findOneAndUpdate({ email }, { sendCode: code });
       }
-      res.status(200).json({ message: "success", role: user.role });
+
+      res.status(200).json({ message: "ok", role: user.role });
     }
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
-  }};
-
-
-  
-  export const changePassword = async (req, res, next) => {
-    try {
-      const { password, email } = req.body;
-      const hash = await bcrypt.hash(password, parseInt(process.env.SALTROUND));
-       let updatedModel;
-      let user = await studentModel.findOne({ email }).select("email");
-      updatedModel=studentModel
-      if (!user) {
-        user = await userModel.findOne({ email }).select("email");
-        updatedModel=userModel
-        
-      }else{
-        return res.status(404).json({ error: "User not found" });
-      }
-  
-      
-  
-      const updated = await updatedModel.findOneAndUpdate(
-        { email: email },
-        { password: hash }
-      );
-  
-      console.log("Update result:", updated);
-  
-      if (updated) {
-        return res.status(200).json({ message: "success" });
-      } 
-     
-        return res.status(500).json({ error: "Failed to update password" });
-      
-    } catch (err) {
-      console.error("Update error:", err); 
-      return res.status(500).json({ error: "Internal server error" });
-    }
-  };
-  
-  
-  
-  
-  
-  
-
-  export const veriFyCode = async (req, res, next) => {
-    try {
-      const { code, email } = req.body;
-      if (!code) {
-        next(new Error("enter coce password", { cause: 404 }));
-      }
-      let updated;
-      
-        updated = await userModel.findOneAndUpdate(
-          { email: email, sendCode: code },
-          { sendCode: "yes" }
-        );
-       if(!updated) {
-        updated = await studentModel.findOneAndUpdate(
-          { email: email, sendCode: code },
-          { sendCode: "yes" }
-        );
-      }
-      if (updated) {
-        res.status(200).json({ message: "success" });
-      } else {
-        return next(new Error("enter valid code", { cause: 500 }));
-      }
-    } catch (err) {
-      return next(new Error("internal error", { cause: 500 }));
-    }
-  };
-  
-  
-  
+  }
+};
