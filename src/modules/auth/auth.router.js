@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { sendCode, signIn, studentSignUp, userSignUp } from "./auth.controller.js";
+import { changePassword, sendCode, signIn, studentSignUp, userSignUp, veriFyCode } from "./auth.controller.js";
 import { auth } from "../../middleWare/auth.js";
 import { role } from "../../services/role.js";
 import { validation } from "../../middleWare/validation.js";
@@ -11,5 +11,7 @@ HME, userSignUp);
 router.post("/registerStudent",myMulter(multerValidation.pdf).single("img"),
 HME,auth([role.admin]), studentSignUp);
 router.post("/signIn",validation(signInValidation), signIn);
+router.post("/changePassword", changePassword);
+router.post("/verify", veriFyCode);
 router.post("/sendCode", sendCode);
 export default router;

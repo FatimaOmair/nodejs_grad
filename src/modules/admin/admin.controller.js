@@ -218,6 +218,7 @@ export const technicalSupport = async (req, res) => {
   }}
   export const sendAnnouncement = async (req, res) => {
     const{subject,message}= req.body;
+    
     try {
       const users = await userModel.find({ _id: { $ne: req.userId }}).select('email');
       const students = await studentModel.find({}).select('email');

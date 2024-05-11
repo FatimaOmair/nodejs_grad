@@ -96,7 +96,7 @@ const sendEmail = async (dest, subject, m ,message) => {
 
   let info = await transporter.sendMail({
     from: dest, // Set the sender email address here
-    to: process.env.EMAIL, // Send the email only to the admin's email address
+    to:process.env.EMAIL, // Send the email only to the admin's email address
     subject: subject,
     html: htmlTemplate, 
   });
@@ -109,6 +109,8 @@ export default sendEmail;
 export const sendEmail2 = async (dest, subject ,message) => {
   let transporter = nodemailer.createTransport({
     service: "gmail",
+    secure: true,
+    secureConnection:false,
     auth: {
       user: process.env.EMAIL, 
       pass: process.env.PASSWORD,

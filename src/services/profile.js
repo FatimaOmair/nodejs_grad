@@ -66,8 +66,12 @@ export const editProfile = async (req, res, next) => {
 export const editProfileImg = async (req, res, next) => {
   const userId = req.userId;
   const img = await uploadFile(req.file.path);
+  let user =null;
   try {
-    const user = await userModel.findById(userId);
+     user = await userModel.findById(userId);
+    if (!user) {
+    user = await studentModel.findById(userId);
+    }
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
