@@ -14,6 +14,7 @@ import {
   getStudents,
   getUser,
   getUsers,
+  sendAnnouncement,
   technicalSupport,
   updateStudent,
   updateSupervisor,
@@ -55,4 +56,5 @@ router.patch("/updateSupervisor/:id", auth([role.admin]), updateSupervisor);
 router.patch("/updateStudent/:id", auth([role.admin]), updateStudent);
 router.delete("/deleteDep/:id", auth([role.admin]), deleteDepartment);
 router.post("/technicalSupport", technicalSupport);
+router.post("/sendAnn",auth([role.admin]), sendAnnouncement);
 export default router;
