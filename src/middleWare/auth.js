@@ -10,7 +10,7 @@ export const auth = (accessRoles = []) => {
         return next(new Error("Invalid token", { cause: 400 }));
       }
       token = token.split(" ")[1];
-      const decoded = jwt.verify(token, process.env.LOGINTOKEN);
+      const decoded = await jwt.verify(token, process.env.LOGINTOKEN);
 
       let user = await userModel.findOne({
         email: decoded.email,
@@ -35,11 +35,10 @@ export const auth = (accessRoles = []) => {
       req.user = user;
       req.userId = decoded._id;
       req.depId = decoded.depId;
-      req.img = decoded.img;
-      req.role = user.role;
+      req.img=decoded.img;
+      req.role = decoded.role;
       next();
     } catch (err) {
-      
       next(new Error("Failed to authenticate", { cause: 400 }));
     }
   };
