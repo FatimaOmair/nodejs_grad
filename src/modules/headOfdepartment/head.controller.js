@@ -6,17 +6,20 @@ import { userModel } from "../../../DB/model/user.model.js";
 export const createSection = async (req, res, next) => {
   try {
     const { num, userId } = req.body;
-    const sectionNum = await sectionModel.find({ num });
-    if(sectionNum.length > 0){
-      return res.json({ message: "Section already exists" });
+    const section = await sectionModel.findOne({ num, depId: req.depId });
+    
+    if (section) {
+      return res.json({ message: "Section already exists in this department" });
     }
-    const section = new sectionModel({ num, depId: req.depId, userId });
-    await section.save();
-    return res.status(200).json({ message: "Success", section });
+
+    const newSection = new sectionModel({ num, depId: req.depId, userId });
+    await newSection.save();
+    return res.status(200).json({ message: "Success", section: newSection });
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
   }
 };
+
 
 
 export const getHeadSections = async (req, res, next) => {
