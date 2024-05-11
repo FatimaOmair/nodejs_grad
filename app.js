@@ -1,77 +1,32 @@
 import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./DB/connection.js";
-import cors from "cors";
-import http from "http"; // Import 'http' module
-import { Server } from "socket.io"; // Import 'Server' from 'socket.io'
-import { adminRouter, authRouter, headRouter, studentRouter, supervisorRouter, chatRouter } from "./src/modules/index.router.js";
-
+import cors from "cors"
+import { adminRouter, authRouter, chatRouter, headRouter, studentRouter, supervisorRouter } from "./src/modules/index.router.js";
 dotenv.config();
 const app = express();
-// const server = http.createServer(app); // Create HTTP server using Express app
-// const io = new Server(server, { // Create Socket.IO server instance attached to HTTP server
-  
-// });
-const port = process.env.PORT || 3000;
-
+const port = 3000 || process.env.PORT;
 connectDB();
-
 app.use(express.json());
-app.use(cors());
-
+app.use(cors())
 const BASE_URL = process.env.BASE_URL;
 
 app.use(`${BASE_URL}auth`, authRouter);
 app.use(`${BASE_URL}admin`, adminRouter);
-app.use(`${BASE_URL}head`, headRouter);
-app.use(`${BASE_URL}student`, studentRouter);
-app.use(`${BASE_URL}supervisor`, supervisorRouter);
-app.use(`${BASE_URL}chat`, chatRouter);
-
+app.use(`${BASE_URL}head`,headRouter);
+app.use(`${BASE_URL}student`,studentRouter);
+app.use(`${BASE_URL}supervisor`,supervisorRouter);
+app.use(`${BASE_URL}chat`,chatRouter)
 app.use("*", (req, res) => {
   res.status(404).json({ message: "page is not found" });
 });
 
 app.use((err, req, res, next) => {
   if (err) {
-    res.status(err["cause"]).json({ message: "catch error", error: err.message });
+    res
+      .status(err["cause"])
+      .json({ message: "catch error", error: err.message });
   }
 });
-
-// Socket.IO logic
-// io.on("connection", (socket) => {
-//   console.log("Connected to socket.io");
-
-//   socket.on("setup", (userData) => {
-//     socket.join(userData._id);
-//     socket.emit("connected");
-//   });
-
-//   socket.on("join chat", (room) => {
-//     socket.join(room);
-//     console.log("User Joined Room: " + room);
-//   });
-
-//   socket.on("typing", (room) => socket.in(room).emit("typing"));
-//   socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
-
-//   socket.on("new message", (newMessageReceived) => {
-//     const chat = newMessageReceived.chat;
-
-//     if (!chat.users) return console.log("chat.users not defined");
-
-//     chat.users.forEach((user) => {
-//       if (user._id === newMessageReceived.sender._id) return;
-
-//       socket.in(user._id).emit("message received", newMessageReceived);
-//     });
-//   });
-
-//   socket.on("disconnect", () => {
-//     console.log("User disconnected");
-//   });
-// });
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 
