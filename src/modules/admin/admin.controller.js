@@ -4,7 +4,7 @@ import { studentModel } from "../../../DB/model/student.model.js";
 import { projectModel } from "../../../DB/model/project.model.js";
 import bcrypt from "bcryptjs";
 import { uploadFile } from "../../services/uploadFile.js";
-import sendEmail from "../../services/email.js";
+import sendEmail, { sendEmail2 } from "../../services/email.js";
 
 export const createDepartment = async (req, res, next) => {
   try {
@@ -216,4 +216,18 @@ export const technicalSupport = async (req, res) => {
     console.error('Error sending email:', error);
     res.status(500).send('Failed to send email.');
   }}
+  export const sendAnnouncement = async (req, res) => {
+    const{subject,message}= req.body;
+    try {
+      const users = await userModel.find({ _id: { $ne: req.userId }}).select('email');
+      const students = await studentModel.find({}).select('email');
+      const all_users = [...users,...students];
+      all_users.forEach(async(user) =>{
+        await sendEmail2(user.email, subject,message);
+      })
+      return res.status(200).send('Email sent successfully.');
+    } catch (error) {
+      next(new Error(err.message, { cause: 500 }));
+}}
+  
 
