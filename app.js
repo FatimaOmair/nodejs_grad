@@ -3,13 +3,15 @@ import dotenv from "dotenv";
 import connectDB from "./DB/connection.js";
 import cors from "cors";
 import http from "http"; // Import 'http' module
-// import WebSocket from 'ws'; // Import 'ws' module for WebSocket
-// import { Server } from "socket.io"; // Import 'Server' from 'socket.io'
+import { Server } from "socket.io"; // Import 'Server' from 'socket.io'
 import { adminRouter, authRouter, headRouter, studentRouter, supervisorRouter, chatRouter } from "./src/modules/index.router.js";
 
 dotenv.config();
 const app = express();
-const server = http.createServer(app); // Create HTTP server using Express app
+// const server = http.createServer(app); // Create HTTP server using Express app
+// const io = new Server(server, { // Create Socket.IO server instance attached to HTTP server
+  
+// });
 const port = process.env.PORT || 3000;
 
 connectDB();
@@ -36,6 +38,40 @@ app.use((err, req, res, next) => {
   }
 });
 
-server.listen(port, () => {
+// Socket.IO logic
+// io.on("connection", (socket) => {
+//   console.log("Connected to socket.io");
+
+//   socket.on("setup", (userData) => {
+//     socket.join(userData._id);
+//     socket.emit("connected");
+//   });
+
+//   socket.on("join chat", (room) => {
+//     socket.join(room);
+//     console.log("User Joined Room: " + room);
+//   });
+
+//   socket.on("typing", (room) => socket.in(room).emit("typing"));
+//   socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
+
+//   socket.on("new message", (newMessageReceived) => {
+//     const chat = newMessageReceived.chat;
+
+//     if (!chat.users) return console.log("chat.users not defined");
+
+//     chat.users.forEach((user) => {
+//       if (user._id === newMessageReceived.sender._id) return;
+
+//       socket.in(user._id).emit("message received", newMessageReceived);
+//     });
+//   });
+
+//   socket.on("disconnect", () => {
+//     console.log("User disconnected");
+//   });
+// });
+app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
+
