@@ -115,7 +115,8 @@ export const signIn = async (req, res, next) => {
       name: user.name,
       depId:user.depId,
       img:user.img,
-      phoneNumber:user.phoneNumber
+      phoneNumber:user.phoneNumber,
+      role:user.role
     };
     if (user instanceof studentModel) {
       tokenPayload.academicYear = user.academicYear;
@@ -129,7 +130,6 @@ export const signIn = async (req, res, next) => {
         expiresIn: 60 * 60 * 24 * 7 ,
       }
     );
-    console.log(tokenPayload)
     return res.status(200).json({ message: "valid account", token, role: user.role });
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
