@@ -28,21 +28,33 @@ export const confirm = async (req, res, next) => {
       { state: "accept" },
       { new: true }
     );
-    await sectionModel.findByIdAndUpdate(req.body.sectionId, { students, visible: false });
-  
-
-    // Create the group chat
+    
+    // Find the section to update
+    const updatedSection = await sectionModel.findByIdAndUpdate(
+      req.body.sectionId, 
+      { students, visible: false },
+      { new: true }
+    );
+    
+    // Check if any student is already a member of a chat
+    const studentsAlreadyInChat = await chatModel.find({ users: { $in:students } });
+    
+    if (studentsAlreadyInChat.length > 0) {
+      return res.status(400).json({ message: "One or more students are already in a chat." });
+    }
     const groupChat = await chatModel.create({
-        users:students,
-        isGroup: true,
-        groupAdmin: req.userId,
+      users: students,
+      isGroup: true,
+      groupAdmin: req.userId,
     });
-    return res.status(201).json({ message: "success", request });
+
+    return res.status(201).json({ message: "Success", request});
     
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
   }
 };
+
 
 
 export const getMySections = async (req, res, next) => {
