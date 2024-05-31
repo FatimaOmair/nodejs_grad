@@ -40,7 +40,7 @@ router.post(
   auth([role.admin]),
   myMulter(multerValidation.pdf).fields([{ name: "img" }, { name: "thesis" }]),
   HME,
-  createProject
+  validation(createProjectValidation),createProject
 );
 router.get("/getUser/:id",auth([role.admin,role.student,role.headOfDepartment,role.supervisor]), getUser);
 router.get("/getUsers", auth([role.admin,role.headOfDepartment]), getUsers);
