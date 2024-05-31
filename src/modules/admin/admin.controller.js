@@ -211,7 +211,7 @@ export const technicalSupport = async (req, res) => {
     console.log(process.env.PASSWORD)
     await sendEmail(email, subject, m,message);
     console.log('Email sent successfully.');
-    res.status(200).send('Email sent successfully.');
+    res.status(200).send('success');
   } catch (error) {
     console.error('Error sending email:', error);
     res.status(500).send('Failed to send email.');
