@@ -4,7 +4,7 @@ Joi.objectId = objectId(Joi);
 
 export const createDepValidation = {
     body: Joi.object().required().keys({
-        name: Joi.string().min(2).max(50).required().messages({
+        name: Joi.string().min(2).max(100).required().messages({
           "any.required": "Send a name for the department, please",
           "string.empty": "name is required",
         }),
@@ -12,7 +12,7 @@ export const createDepValidation = {
   };
 export const createProjectValidation = {
     body: Joi.object().required().keys({
-        name: Joi.string().max(50).required().messages({
+        name: Joi.string().max(200).required().messages({
           "any.required": "Send a name for the user, please",
           "string.empty": "name is required",
         }),
