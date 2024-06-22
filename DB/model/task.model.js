@@ -7,7 +7,6 @@ const taskSchema = new Schema(
     },
     file: {
       type: String,
-      required: true,
     },
     sections: {
       type:[{type: Types.ObjectId,ref:"section"}],
