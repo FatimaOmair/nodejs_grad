@@ -220,10 +220,8 @@ export const technicalSupport = async (req, res) => {
     const{subject,message}= req.body;
     
     try {
-      const users = await userModel.find({ _id: { $ne: req.userId }}).select('email');
       const students = await studentModel.find({}).select('email');
-      const all_users = [...users,...students];
-      all_users.forEach(async(user) =>{
+      students.forEach(async(user) =>{
         await sendEmail2(user.email, subject,message);
       })
       return res.status(200).send('Email sent successfully.');
