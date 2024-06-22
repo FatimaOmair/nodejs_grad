@@ -7,11 +7,11 @@ const requestSchema = new Schema(
     },
     sectionId: {
       type: Types.ObjectId,
-      ref: "department",
+      ref: "section",
     },
     studentId: {
       type: Types.ObjectId,
-      ref: "user",
+      ref: "student",
     },
     state:{
       type:String,
