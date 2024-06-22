@@ -80,8 +80,12 @@ export const assignTask = async (req, res, next) => {
   try {
     const { txt, sections,startDate,endDate } = req.body;
     const supervisorId = req.userId;
-    const fileTask = await uploadFile(req.file.path);
-    const task = await taskModel.create({ txt, sections,startDate, endDate, file: fileTask,supervisor:supervisorId });
+    if(req.file){
+      const fileTask = await uploadFile(req.file.path);
+      const task = await taskModel.create({ txt, sections,startDate, endDate, file: fileTask,supervisor:supervisorId });
+
+    }
+    const task = await taskModel.create({ txt, sections,startDate, endDate,supervisor:supervisorId });
     return res.status(201).json({message:"success",task});
   } catch (err) {
     next(new Error(err.message, { cause: 500 }));
