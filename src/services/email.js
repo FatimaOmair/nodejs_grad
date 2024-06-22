@@ -194,7 +194,7 @@ export const sendEmail2 = async (dest, subject ,message) => {
     </div>
     <div class="footer">
       <p> [Palestine Technical University Khadoorie]</p>
-      <p>${dest}</p>
+
     </div>
   </div>
 </body>
