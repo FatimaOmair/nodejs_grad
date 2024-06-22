@@ -28,7 +28,10 @@ export const bookSection = async (req, res, next) => {
               return res.status(400).json({ message: `Student with university number ${students[i]} is already in another section` });
           }
       }
-
+     const check = await requestModel.findOne({studentId:req.userId})
+     if(check){
+      return res.json({ message: `Student is already send a request`})
+     }
       const request = await requestModel.create({ students: studentObjectIds, studentId, sectionId });
       await sectionModel.findByIdAndUpdate(sectionId, { visible: false });
       return res.status(201).json({ message: "success", request });
