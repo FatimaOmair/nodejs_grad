@@ -7,38 +7,46 @@ import { uploadFile } from "../../services/uploadFile.js";
 
 export const bookSection = async (req, res, next) => {
   try {
-      const { students, studentId, sectionId } = req.body;
-      const studentObjectIds = [];
-      for (let i = 0; i < students.length; i++) {
-        const student = await getUser(students[i]);
+    const { students, studentId, sectionId } = req.body;
+    const studentObjectIds = [];
 
-        if (student) {
-              studentObjectIds.push(student._id);
-          } else {
-              return res.status(400).json({ message: `Student with university number ${students[i]} not found` });
-          }
+    for (let i = 0; i < students.length; i++) {
+      const student = await getUser(students[i]);
+
+      if (student) {
+        studentObjectIds.push(student._id);
+      } else {
+        return res.status(400).json({ message: `Student with university number ${students[i]} not found` });
       }
-      // Check if any of the students are already in another section
-      for (let i = 0; i < studentObjectIds.length; i++) {
-          const studentExists = await sectionModel.findOne({
-              students: { $in: [studentObjectIds[i]] },
-              _id: { $ne: sectionId } 
-          });
-          if (studentExists) {
-              return res.status(400).json({ message: `Student with university number ${students[i]} is already in another section` });
-          }
+    }
+
+    // Check if any of the students are already in another section
+    for (let i = 0; i < studentObjectIds.length; i++) {
+      const studentExists = await sectionModel.findOne({
+        students: { $in: [studentObjectIds[i]] },
+        _id: { $ne: sectionId }
+      });
+      if (studentExists) {
+        return res.status(400).json({ message: `Student with university number ${students[i]} is already in another section` });
       }
-     const check = await requestModel.findOne({studentId:req.userId})
-     if(check){
-      return res.json({ message: `Student is already send a request`})
-     }
-      const request = await requestModel.create({ students: studentObjectIds, studentId, sectionId });
-      await sectionModel.findByIdAndUpdate(sectionId, { visible: false });
-      return res.status(201).json({ message: "success", request });
+    }
+
+    // Check if the student has already sent a request
+     
+
+    if (existingRequest) {
+      return res.status(400).json({ message: `Student has already sent a request or is already in a pending or accepted status` });
+    }
+
+    const request = await requestModel.create({ students: studentObjectIds, studentId, sectionId });
+    await sectionModel.findByIdAndUpdate(sectionId, { visible: false });
+    return res.status(201).json({ message: "success", request });
+
   } catch (err) {
-      next(new Error(err.message, { cause: 500 }));
+    next(new Error(err.message, { cause: 500 }));
   }
 };
+
 
   export const getStudentSection = async (req, res, next) => {
     try {
