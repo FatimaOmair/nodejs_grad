@@ -146,8 +146,12 @@ export const updateTask = async (req, res, next) => {
     const {id}= req.params;
     const { txt, sections,startDate,endDate } = req.body;
     const supervisorId = req.userId;
+    let task=null;
+    if(req.file){
     const fileTask = await uploadFile(req.file.path);
-    const task = await taskModel.findByIdAndUpdate(id,{ txt, sections,startDate, endDate, file: fileTask,supervisor:supervisorId },{new:true});
+    task = await taskModel.findByIdAndUpdate(id,{ txt, sections,startDate, endDate, file: fileTask,supervisor:supervisorId },{new:true});
+    }
+    task = await taskModel.findByIdAndUpdate(id,{ txt, sections,startDate, endDate,supervisor:supervisorId },{new:true});
     return res.status(201).json({message:"success",task});
   }catch (err) {
     next(new Error(err.message, { cause: 500 }));
